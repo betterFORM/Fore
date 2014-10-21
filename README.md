@@ -1,52 +1,51 @@
-# betterForm 6
+# betterForm 5 Quickstart Guide
 
-## Next steps
+betterFORM 5 is an implementation of XForms 1.1 in Java. It's about 97% conformant to the W3C recommendation and allows to build advanced form applications that require complex validations, calculations and dependency management. 
 
-### x-tags versus Polymer
+For further information on XForms  see:
 
-#### x-tags pros + cons
-
-##### pros
-* small (36k minified)
-* seems stable
-* foundation for bricks
-
-##### cons
-* only rudimentary support for templates (-> programatic approach needed)
-
-#### Polymer pros + cons
-
-##### pros
-
-* feature-rich (may also be considered a con ;)
-* much better template support, observables
-* lively community
-
-##### cons
-
-* harder to understand
-* very much in motion - features may breaks from version to version
-* size is about 160k minified
-* not official support for IE - unclear status for mobile browsers 
+* http://www.w3.org/MarkUp/Forms
+* http://en.wikibooks.org/wiki/XForms
 
 
+## Requirements for betterFORM 5
+   Runtime requirements:
+   
+   * [Java JDK 1.6 or newer](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+   
+   For building:
+   
+   * Apache Ant 1.8.2 or newer for building the sources
+   * [Optional: Apache Maven 2.0.5 or newer]
 
-## todos
 
-### cleanup
+## Building  
 
-#### resources/scripts
-still kept for reference during development of new javascript
+Apache Ant 1.8.2 or is needed to build betterFORM from the sources. 
 
-#### resources/xslt
-remove deprecated xslts
+[Building betterFORM](http://betterform.wordpress.com/building-betterform/) provides a quick overview about the available build targets. 
 
-#### Zaphod
-what to do about it? Is it still needed? Someone out there using it?
+Checkout the [master](https://github.com/betterFORM/betterFORM) branch to get the source of previous and current betterFORM releases. Or lift off at the [development](https://github.com/betterFORM/betterFORM/tree/development) branch where the daily work takes place.
 
-#### Check usage in test files
+##Documentation
 
-#### add 'todo' markers to mark occurrences that need discussion
+For more detailed information see the [documentation](http://betterform.wordpress.com/documentation/) or read the latest news at our [blog](http://betterform.wordpress.com).
 
-#### remove dojo from reference forms
+## Getting professional help and more
+Take a look at the our [homepage](http://www.betterform.de) to get to know more about professional services & support betterFORM provides
+
+Get in touch with betterFORM [directly](http://www.betterform.de/en/whoweare.html), via [Twitter](https://twitter.com/betterform2010) or [Facebook](http://www.facebook.com/pages/betterFORM/110961888926581)
+
+## Minimal Requirements for older Versions
+
+### betterFORM limeGreen
+   * JDK 1.6
+   * Apache Ant 1.8.2 or newer
+   * [Optional: Apache Maven 2.0.5 or newer]
+
+###lightSteelBlue
+   * JDK 1.6
+   * Apache Ant 1.8.2 or newer
+   * [Optional: Apache Maven 2.0.5 or newer]
+    
 
