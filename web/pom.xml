@@ -96,7 +96,7 @@
 <dependency>
 <groupId>de.betterform</groupId>
 <artifactId>betterform-core</artifactId>
-<version>5.0rc8</version>
+<version>5.0</version>
 </dependency>
 <dependency>
 <groupId>org.directwebremoting.dwr</groupId>
@@ -990,6 +990,11 @@
                     <releases>
                         <enabled>false</enabled>
                     </releases>
+                </repository>
+                <repository>
+                    <id>project.local</id>
+                    <name>project</name>
+                    <url>file:${project.basedir}/src/main/lib</url>
                 </repository>
             </repositories>
 

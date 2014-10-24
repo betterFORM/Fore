@@ -34,7 +34,7 @@
     <property name="webapp.dir" value="${target}/${web.app.name}"/>
     <!--<property name="resources.dir" value="${webapp.dir}/resources"/>-->
     <property name="resources.dir" value="${webapp.dir}/WEB-INF/classes/META-INF/resources"/>
-    <property name="targetname" value="${target}/${web.app.name}-${app.version.number}"/>
+    <property name="targetname" value="${target}/${app.name}-${app.version.name}-${app.version.number}"/>
 
     <antversion property="antversion" atleast="${properties.antversion}"/>
     <!-- **************************************** HOUSEKEEPING **************************************** -->
@@ -143,7 +143,7 @@
         compressing classes plus resources into a single jar
         ************************************************************************************
         </echo>
-        <jar basedir="${target}/classes" compress="true" jarfile="${target}/betterform.jar" update="true" excludes="**/infinispan.xml"/>
+        <jar basedir="${target}/classes" compress="true" jarfile="${targetname}.jar" update="true" excludes="**/infinispan.xml"/>
 
         <echo>
             ************************************************************************************
@@ -380,7 +380,7 @@
         copying betterform.jar to WEB-INF/lib
         ************************************************************************************
         </echo>
-        <copy todir="${webapp.dir}/WEB-INF/lib" file="${target}/betterform.jar"/>
+        <copy todir="${webapp.dir}/WEB-INF/lib" file="${targetname}.jar"/>
         <move todir="${webapp.dir}/WEB-INF/classes" file="${webapp.dir}/META-INF/infinispan.xml"/>
     </target>
 

@@ -147,14 +147,16 @@ public class ModelGenerator {
         String styles = Config.getInstance().getProperty("error-transform");
         Transformer transformer = this.transformerService.getTransformerByName(styles);
         org.w3c.dom.Document htmlDoc = getSanitizedHtml();
+        DOMUtil.prettyPrintDOM(htmlDoc);
+
         transformer.setParameter("errors", new StreamSource(new StringReader(errorXML)));
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
 
-//        StreamResult result = new StreamResult(outputStream);
-        DOMResult result = new DOMResult();
+        StreamResult result = new StreamResult(outputStream);
+//        DOMResult result = new DOMResult();
         transformer.transform(new DOMSource(htmlDoc), result);
-        DOMUtil.prettyPrintDOM(result.getNode());
+//        DOMUtil.prettyPrintDOM(result.getNode());
         return outputStream;
     }
 

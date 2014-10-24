@@ -5,8 +5,6 @@
 
 package de.betterform.xml.xforms.model.submission;
 
-import com.sun.javaws.jnl.*;
-import com.sun.tools.internal.ws.util.xml.XmlUtil;
 import de.betterform.BetterFORMConstants;
 import de.betterform.connector.SubmissionHandler;
 import de.betterform.connector.http.AbstractHTTPConnector;
@@ -38,7 +36,6 @@ import net.sf.saxon.dom.DocumentWrapper;
 import net.sf.saxon.om.Item;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.exist.dom.XMLUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
