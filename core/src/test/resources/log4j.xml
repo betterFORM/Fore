@@ -42,15 +42,15 @@
     <!--
         change to WARN in production environments
     -->
-    <category name="de.betterform.agent.web.flux">
+    <category name="de.betterform.fore.agent.web.flux">
         <priority value="INFO"/>
     </category>
 
-    <category name="de.betterform.agent.web.cache">
+    <category name="de.betterform.fore.agent.web.cache">
         <priority value="INFO"/>
     </category>
 
-    <category name="de.betterform.xml.xforms">
+    <category name="de.betterform.fore.xml.xforms">
         <priority value="DEBUG"/>
     </category>
 

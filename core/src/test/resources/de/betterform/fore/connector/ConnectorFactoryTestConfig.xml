@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2012. betterFORM Project - http://www.betterform.de
+  ~ Licensed under the terms of BSD License
+  -->
+
+<!-- $Id: ConnectorFactoryTestConfig.xml 3508 2008-08-31 10:03:03Z lars $ -->
+<betterform-config>
+    <!-- PLEASE COMMENT YOUR ENTRIES -->
+    <properties>
+        <property name="xforms.schema" value="XFormsDatatypes11.xsd"/>
+    </properties>
+
+    <connectors factoryClass="de.betterform.fore.connector.TestConnectorFactory">
+        <submission-handler scheme="test" class="de.betterform.fore.connector.ConnectorFactoryTestSubmissionHandler"/>
+        <uri-resolver scheme="test" class="de.betterform.fore.connector.ConnectorFactoryTestURIResolver"/>
+    </connectors>
+</betterform-config>

@@ -36,7 +36,7 @@
 	<!--  XForms Filter -->
 	<filter>
 		<filter-name>XFormsFilter</filter-name>
-		<filter-class>de.betterform.agent.web.filter.XFormsFilter</filter-class>
+		<filter-class>de.betterform.fore.agent.web.filter.XFormsFilter</filter-class>
     </filter>
 
 	<!--
@@ -101,7 +101,7 @@
 -->
     <servlet>
         <servlet-name>error</servlet-name>
-        <servlet-class>de.betterform.agent.web.servlet.ErrorServlet</servlet-class>
+        <servlet-class>de.betterform.fore.agent.web.servlet.ErrorServlet</servlet-class>
     </servlet>
 
 
@@ -113,7 +113,7 @@
 
     <servlet>
         <servlet-name>ResponseServlet</servlet-name>
-        <servlet-class>de.betterform.agent.web.servlet.FormResponseServlet</servlet-class>
+        <servlet-class>de.betterform.fore.agent.web.servlet.FormResponseServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -188,7 +188,7 @@
 
     <servlet>
         <servlet-name>inspector</servlet-name>
-        <servlet-class>de.betterform.agent.web.servlet.XFormsInspectorServlet</servlet-class>
+        <servlet-class>de.betterform.fore.agent.web.servlet.XFormsInspectorServlet</servlet-class>
     </servlet>
 
     
@@ -217,11 +217,11 @@
     </servlet>
     <servlet>
         <servlet-name>PlainHtml</servlet-name>
-        <servlet-class>de.betterform.agent.web.servlet.PlainHtmlServlet</servlet-class>
+        <servlet-class>de.betterform.fore.agent.web.servlet.PlainHtmlServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ViewServlet</servlet-name>
-        <servlet-class>de.betterform.agent.web.servlet.ViewServlet</servlet-class>
+        <servlet-class>de.betterform.fore.agent.web.servlet.ViewServlet</servlet-class>
     </servlet>
 
     <servlet>

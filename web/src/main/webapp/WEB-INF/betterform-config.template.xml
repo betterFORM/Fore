@@ -118,7 +118,7 @@
              ! You have to uncomment this if you would like to use betterFORM with custom SSL-Certificates. !
         -->
 <!--
-        <property name="httpclient.ssl.context" value="de.betterform.connector.http.ssl.KeyStoreSSLContext" description="Full classpath of SSLProtocolSocketFactory which should be used by httpclient."/>
+        <property name="httpclient.ssl.context" value="de.betterform.fore.connector.http.ssl.KeyStoreSSLContext" description="Full classpath of SSLProtocolSocketFactory which should be used by httpclient."/>
 -->
         <!--
             Specify a customPort for SSLProtocolSocketFactory for httpclient.
@@ -170,44 +170,44 @@
         <!--
             For each of the connector types you can specifiy one connector to handle one URI scheme.
         -->
-        <uri-resolver scheme="file" class="de.betterform.connector.file.FileURIResolver" description="Handler for the file protocol"/>
-        <uri-resolver scheme="http" class="de.betterform.connector.http.HTTPURIResolver" description="Handler for the http protocol"/>
-        <uri-resolver scheme="https" class="de.betterform.connector.http.HTTPURIResolver" description="Handler for the https protocol"/>
-        <uri-resolver scheme="xmlrpc" class="de.betterform.connector.xmlrpc.XMLRPCURIResolver" description="Handler for the xmlrpc protocol"/>
-        <uri-resolver scheme="context" class="de.betterform.connector.context.ContextMapResolver" description="Handler for the context protocol"/>
-        <uri-resolver scheme="exist" class="de.betterform.connector.exist.ExistURIResolver" description="Handler for local eXist-db connections"/>
+        <uri-resolver scheme="file" class="de.betterform.fore.connector.file.FileURIResolver" description="Handler for the file protocol"/>
+        <uri-resolver scheme="http" class="de.betterform.fore.connector.http.HTTPURIResolver" description="Handler for the http protocol"/>
+        <uri-resolver scheme="https" class="de.betterform.fore.connector.http.HTTPURIResolver" description="Handler for the https protocol"/>
+        <uri-resolver scheme="xmlrpc" class="de.betterform.fore.connector.xmlrpc.XMLRPCURIResolver" description="Handler for the xmlrpc protocol"/>
+        <uri-resolver scheme="context" class="de.betterform.fore.connector.context.ContextMapResolver" description="Handler for the context protocol"/>
+        <uri-resolver scheme="exist" class="de.betterform.fore.connector.exist.ExistURIResolver" description="Handler for local eXist-db connections"/>
 <!--
-        <uri-resolver scheme="context" class="de.betterform.connector.context.ContextResolver"/>
-        <uri-resolver scheme="contextobject" class="de.betterform.connector.context.ContextObjectResolver"/>
+        <uri-resolver scheme="context" class="de.betterform.fore.connector.context.ContextResolver"/>
+        <uri-resolver scheme="contextobject" class="de.betterform.fore.connector.context.ContextObjectResolver"/>
 -->
 
-        <submission-handler scheme="file" class="de.betterform.connector.file.FileSubmissionHandler"/>
-        <submission-handler scheme="http" class="de.betterform.connector.http.HTTPSubmissionHandler"/>
-        <submission-handler scheme="https" class="de.betterform.connector.http.HTTPSubmissionHandler"/>
-        <submission-handler scheme="ant" class="de.betterform.connector.ant.AntSubmissionHandler"/>
+        <submission-handler scheme="file" class="de.betterform.fore.connector.file.FileSubmissionHandler"/>
+        <submission-handler scheme="http" class="de.betterform.fore.connector.http.HTTPSubmissionHandler"/>
+        <submission-handler scheme="https" class="de.betterform.fore.connector.http.HTTPSubmissionHandler"/>
+        <submission-handler scheme="ant" class="de.betterform.fore.connector.ant.AntSubmissionHandler"/>
         <!-- HTTPSubmissionHandlerXI evaluates any bf:include within the data to load -->
 <!--
-        <submission-handler scheme="http" class="de.betterform.connector.http.HTTPSubmissionHandlerXI"/>
-        <submission-handler scheme="https" class="de.betterform.connector.http.HTTPSubmissionHandlerXI"/>
+        <submission-handler scheme="http" class="de.betterform.fore.connector.http.HTTPSubmissionHandlerXI"/>
+        <submission-handler scheme="https" class="de.betterform.fore.connector.http.HTTPSubmissionHandlerXI"/>
 -->
-        <submission-handler scheme="xmlrpc" class="de.betterform.connector.xmlrpc.XMLRPCSubmissionHandler"/>
+        <submission-handler scheme="xmlrpc" class="de.betterform.fore.connector.xmlrpc.XMLRPCSubmissionHandler"/>
 <!--
-        <submission-handler scheme="context" class="de.betterform.connector.context.ContextSubmissionHandler"/>
+        <submission-handler scheme="context" class="de.betterform.fore.connector.context.ContextSubmissionHandler"/>
 -->
-        <submission-handler scheme="mailto" class="de.betterform.connector.smtp.SMTPSubmissionHandler"/>
-        <submission-handler scheme="echo" class="de.betterform.connector.echo.EchoSubmissionHandler"/>
-        <submission-handler scheme="exec" class="de.betterform.connector.exec.ExecSubmissionHandler"/>
-        <submission-handler scheme="xslt" class="de.betterform.connector.xslt.XSLTSubmissionHandler"/>
-        <submission-handler scheme="model" class="de.betterform.connector.ModelSubmissionHandler"/>
-        <submission-handler scheme="context" class="de.betterform.connector.context.ContextMapSubmissionHandler"/>
-        <submission-handler scheme="exist" class="de.betterform.connector.exist.ExistSubmissionHandler"/>
-        <!--        <submission-handler scheme="jms" class="de.betterform.connector.jms.JMSSubmissionHandler"/>-->
+        <submission-handler scheme="mailto" class="de.betterform.fore.connector.smtp.SMTPSubmissionHandler"/>
+        <submission-handler scheme="echo" class="de.betterform.fore.connector.echo.EchoSubmissionHandler"/>
+        <submission-handler scheme="exec" class="de.betterform.fore.connector.exec.ExecSubmissionHandler"/>
+        <submission-handler scheme="xslt" class="de.betterform.fore.connector.xslt.XSLTSubmissionHandler"/>
+        <submission-handler scheme="model" class="de.betterform.fore.connector.ModelSubmissionHandler"/>
+        <submission-handler scheme="context" class="de.betterform.fore.connector.context.ContextMapSubmissionHandler"/>
+        <submission-handler scheme="exist" class="de.betterform.fore.connector.exist.ExistSubmissionHandler"/>
+        <!--        <submission-handler scheme="jms" class="de.betterform.fore.connector.jms.JMSSubmissionHandler"/>-->
         <!--
             These connector types are deprecated. Their usage is strongly discouraged,
             since they may disappear without notice. Use custom extension functions instead.
         -->
-        <!--        <modelitem-calculator scheme="http" class="de.betterform.connector.http.HTTPModelItemCalculator"/>-->
-        <!--        <modelitem-validator scheme="http" class="de.betterform.connector.http.HTTPModelItemValidator"/>-->
+        <!--        <modelitem-calculator scheme="http" class="de.betterform.fore.connector.http.HTTPModelItemCalculator"/>-->
+        <!--        <modelitem-validator scheme="http" class="de.betterform.fore.connector.http.HTTPModelItemValidator"/>-->
     </connectors>
 
     <custom-elements>
@@ -219,9 +219,9 @@
           -->
         <!--element namespace="http://yourdomain.com/path" name="yourcontrol" class="com.yourdomain.yourpackage.YourClass"/-->
 
-        <element namespace="http://betterform.sourceforge.net/xforms/controls" name="dialog" class="de.betterform.xml.xforms.ui.extensions.Dialog"/>
-        <element namespace="http://betterform.sourceforge.net/xforms/controls" name="show" class="de.betterform.xml.xforms.action.extensions.ShowAction"/>
-        <element namespace="http://betterform.sourceforge.net/xforms/controls" name="hide" class="de.betterform.xml.xforms.action.extensions.HideAction"/>
+        <element namespace="http://betterform.sourceforge.net/xforms/controls" name="dialog" class="de.betterform.fore.xml.xforms.ui.extensions.Dialog"/>
+        <element namespace="http://betterform.sourceforge.net/xforms/controls" name="show" class="de.betterform.fore.xml.xforms.action.extensions.ShowAction"/>
+        <element namespace="http://betterform.sourceforge.net/xforms/controls" name="hide" class="de.betterform.fore.xml.xforms.action.extensions.HideAction"/>
         
     </custom-elements>
 

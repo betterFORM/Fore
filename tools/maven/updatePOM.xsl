@@ -52,7 +52,7 @@
                 </xsl:when>
                 <xsl:when test="$module = document($buildprops)/root/web/app/name">
                     <dependency>
-                        <groupId>de.betterform</groupId>
+                        <groupId>de.betterform.fore</groupId>
                         <artifactId><xsl:value-of select="document($buildprops)/root/core/app/name"/></artifactId>
                         <version><xsl:value-of select="document($buildprops)/root/app/version/number"/></version>
                     </dependency>
@@ -68,7 +68,7 @@
                 </xsl:when>
                 <xsl:when test="$module = document($buildprops)/root/betty/app/name">
                     <dependency>
-                        <groupId>de.betterform</groupId>
+                        <groupId>de.betterform.fore</groupId>
                         <artifactId><xsl:value-of select="document($buildprops)/root/core/app/name"/></artifactId>
                         <version><xsl:value-of select="document($buildprops)/root/app/version/number"/></version>
                     </dependency>

@@ -36,7 +36,7 @@
 	<!--  XForms Filter -->
 	<filter>
 		<filter-name>XFormsFilter</filter-name>
-		<filter-class>de.betterform.agent.web.filter.XFormsFilter</filter-class>
+		<filter-class>de.betterform.fore.agent.web.filter.XFormsFilter</filter-class>
     </filter>
 
 	<!--

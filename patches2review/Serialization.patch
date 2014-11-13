@@ -398,8 +398,8 @@ Index: core/src/main/java/de/betterform/xml/config/DefaultConfig.java
 -import net.sf.saxon.dom.NodeWrapper;
 -import net.sf.saxon.om.NodeInfo;
 -import net.sf.saxon.sxpath.IndependentContext;
- import de.betterform.connector.InstanceSerializer;
- import de.betterform.connector.InstanceSerializerMap;
+ import de.betterform.fore.connector.InstanceSerializer;
+ import de.betterform.fore.connector.InstanceSerializerMap;
  import de.betterform.xml.xforms.exception.XFormsException;
  import de.betterform.xml.xpath.impl.saxon.XPathCache;
  import de.betterform.xml.xpath.impl.saxon.XPathUtil;
@@ -950,7 +950,7 @@ Index: web/src/main/java/de/betterform/agent/web/WebUtil.java
  
  package de.betterform.agent.web;
  
-+import de.betterform.connector.http.AbstractHTTPConnector;
++import de.betterform.fore.connector.http.AbstractHTTPConnector;
 +import de.betterform.xml.xforms.XFormsProcessor;
 +import de.betterform.xml.xforms.model.submission.RequestHeaders;
 +import de.betterform.xml.xslt.TransformerService;
@@ -959,7 +959,7 @@ Index: web/src/main/java/de/betterform/agent/web/WebUtil.java
  import org.apache.commons.httpclient.Cookie;
  import org.apache.commons.logging.Log;
  import org.apache.commons.logging.LogFactory;
--import de.betterform.connector.http.AbstractHTTPConnector;
+-import de.betterform.fore.connector.http.AbstractHTTPConnector;
 -import de.betterform.xml.xforms.XFormsProcessor;
 -import de.betterform.xml.xforms.model.submission.RequestHeaders;
 -import de.betterform.xml.xslt.TransformerService;

@@ -44,7 +44,7 @@
     </xsl:text>
         <filter>
             <filter-name>XFormsFilter</filter-name>
-            <filter-class>de.betterform.agent.web.filter.XFormsFilter</filter-class>
+            <filter-class>XFormsFilter</filter-class>
             <init-param>
                 <param-name>useragent</param-name>
                 <param-value>dojo</param-value>
@@ -74,7 +74,7 @@
 
         <servlet>
             <servlet-name>XFormsPostServlet</servlet-name>
-            <servlet-class>de.betterform.agent.web.servlet.XFormsPostServlet</servlet-class>
+            <servlet-class>XFormsPostServlet</servlet-class>
         </servlet>
 
         <servlet>

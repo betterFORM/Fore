@@ -606,7 +606,7 @@
             <testCaseStatus>Passed</testCaseStatus>
             <testCaseDate>2009-06-15</testCaseDate>
             <testCaseRequired>true</testCaseRequired>
-            <testCaseNote>? Stack Trace:  de.betterform ?</testCaseNote>
+            <testCaseNote>? Stack Trace: de.betterform.fore ?</testCaseNote>
         </testCase>
         <testCase>
             <testCaseSection>4.5.1</testCaseSection>

@@ -54,7 +54,7 @@
 
     <!-- custom log level -->
 
-    <category name="de.betterform">
+    <category name="de.betterform.fore">
         <priority value="@BETTERFORM_LOG_LEVEL@"/>
     </category>
 

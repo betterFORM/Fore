@@ -25,7 +25,7 @@
         <xsl:copy-of select="."/>
         <servlet>
             <servlet-name>error</servlet-name>
-            <servlet-class>de.betterform.agent.web.servlet.ErrorServlet</servlet-class>
+            <servlet-class>ErrorServlet</servlet-class>
         </servlet>
     </xsl:template>
 

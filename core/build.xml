@@ -355,7 +355,7 @@
              sourcepath="${basedir}/src/main/java"
              destdir="${basedir}/target/doc"
              classpathref="compile.class.path"
-             packagenames="de.betterform.*">
+             packagenames="de.betterform.fore.*">
          </javadoc>
 
          <!--set version filter-->

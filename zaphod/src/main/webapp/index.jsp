@@ -191,35 +191,35 @@
         of <code>xforms.engine.resources</code> is set to the same directory as the patter of the filter.</p>
 
         <pre><code>
-&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;web-app version="2.5"
+            &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+            &lt;web-app version="2.5"
             xmlns="http://java.sun.com/xml/ns/javaee"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
             http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"&gt;
-  &lt;description&gt;Sampleapplication for forwarding Responses to betterForm.&lt;/description&gt;
-  &lt;display-name&gt;Sample Application&lt;/display-name&gt;
-  &lt;filter&gt;
-    &lt;filter-name&gt;CrossContextFilter&lt;/filter-name&gt;
-    &lt;filter-class&gt;de.betterform.agent.web.filter.CrossContextFilter&lt;/filter-class&gt;
-    &lt;init-param&gt;
-      &lt;param-name&gt;xforms.engine.webcontext&lt;/param-name&gt;
-      &lt;param-value&gt;betterform&lt;/param-value&gt;
-    &lt;/init-param&gt;
-    &lt;init-param&gt;
-      &lt;param-name&gt;xforms.engine.servlet&lt;/param-name&gt;
-      &lt;param-value&gt;/repeater&lt;/param-value&gt;
-    &lt;/init-param&gt;
-    &lt;init-param&gt;
-      &lt;param-name&gt;xforms.engine.resources&lt;/param-name&gt;
-      &lt;param-value&gt;/SampleApp/forms/forward&lt;/param-value&gt;
-    &lt;/init-param&gt;
-  &lt;/filter&gt;
-  &lt;filter-mapping&gt;
-    &lt;filter-name&gt;CrossContextFilter&lt;/filter-name&gt;
-    &lt;url-pattern&gt;/forms/*&lt;/url-pattern&gt;
-  &lt;/filter-mapping&gt;
-&lt;/web-app&gt;
+            &lt;description&gt;Sampleapplication for forwarding Responses to betterForm.&lt;/description&gt;
+            &lt;display-name&gt;Sample Application&lt;/display-name&gt;
+            &lt;filter&gt;
+            &lt;filter-name&gt;CrossContextFilter&lt;/filter-name&gt;
+            &lt;filter-class&gt;de.betterform.fore.agent.web.filter.CrossContextFilter&lt;/filter-class&gt;
+            &lt;init-param&gt;
+            &lt;param-name&gt;xforms.engine.webcontext&lt;/param-name&gt;
+            &lt;param-value&gt;betterform&lt;/param-value&gt;
+            &lt;/init-param&gt;
+            &lt;init-param&gt;
+            &lt;param-name&gt;xforms.engine.servlet&lt;/param-name&gt;
+            &lt;param-value&gt;/repeater&lt;/param-value&gt;
+            &lt;/init-param&gt;
+            &lt;init-param&gt;
+            &lt;param-name&gt;xforms.engine.resources&lt;/param-name&gt;
+            &lt;param-value&gt;/SampleApp/forms/forward&lt;/param-value&gt;
+            &lt;/init-param&gt;
+            &lt;/filter&gt;
+            &lt;filter-mapping&gt;
+            &lt;filter-name&gt;CrossContextFilter&lt;/filter-name&gt;
+            &lt;url-pattern&gt;/forms/*&lt;/url-pattern&gt;
+            &lt;/filter-mapping&gt;
+            &lt;/web-app&gt;
         </code></pre>
 
     <h2>Status</h2>

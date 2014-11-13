@@ -62,7 +62,7 @@
     </category>
 -->
 
-    <category name="de.betterform">
+    <category name="de.betterform.fore">
         <priority value="DEBUG"/>
     </category>
 

@@ -10,12 +10,12 @@
 
   <allow>
       <create creator="new" javascript="Flux" scope="request">
-          <param name="class" value="de.betterform.agent.web.flux.FluxFacade"/>
+          <param name="class" value="de.betterform.fore.agent.web.flux.FluxFacade"/>
       </create>
       <create creator="new" javascript="XFormsModelElement" scope="request">
-          <param name="class" value="de.betterform.agent.web.flux.FluxModel"/>
+          <param name="class" value="de.betterform.fore.agent.web.flux.FluxModel"/>
       </create>
-      <convert match="de.betterform.xml.events.XMLEvent" converter="bean"/>
+      <convert match="de.betterform.fore.xml.events.XMLEvent" converter="bean"/>
 
     <!--
     <filter class="org.getahead.dwrdemo.monitor.MonitoringAjaxFilter"/>
