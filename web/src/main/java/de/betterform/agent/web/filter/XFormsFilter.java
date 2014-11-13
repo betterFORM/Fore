@@ -31,6 +31,7 @@ import de.betterform.xml.xslt.impl.CachingTransformerService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.infinispan.Cache;
+import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
@@ -250,9 +251,18 @@ public class XFormsFilter implements Filter {
                     }else {
                         //todo: return error information
                         List errors = mp.getErrors();
-                        String errs = mp.serialize();
+//                        String errs = mp.serialize();
+                        Document errs = null;
+                        try {
+                            errs = mp.serializeAsDOM();
+                        } catch (SAXException e) {
+                            e.printStackTrace();
+                        } catch (ParserConfigurationException e) {
+                            e.printStackTrace();
+                        }
+                        DOMUtil.prettyPrintDOM(errs);
                         // mix errors back into original html document
-                        ByteArrayOutputStream out = generator.mixinErrors(errs);
+                        ByteArrayOutputStream out = generator.mixinXMLErrors(errs);
 
                         response.setContentLength(out.toByteArray().length);
                         response.getOutputStream().write(out.toByteArray());

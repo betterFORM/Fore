@@ -13,7 +13,7 @@
     <xsl:output method="xhtml" encoding="UTF-8" indent="yes"/>
 
 
-    <xsl:variable name="errors" select="document('errors.xml')"/>
+    <xsl:param name="errors" />
 
     <xsl:output method="xhtml" omit-xml-declaration="yes"/>
     <xsl:strip-space elements="*"/>
@@ -24,6 +24,8 @@
     <xsl:template match="/html">
         <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html></xsl:text>
         <xsl:value-of select="$CR"/>
+
+        <xsl:message>errors: <xsl:value-of select="$errors"/></xsl:message>
         <xsl:copy>
             <xsl:apply-templates/>
         </xsl:copy>
@@ -34,7 +36,7 @@
 
         <xsl:variable name="currName" select="@name"/>
         <xsl:message><xsl:value-of select="$currName"/></xsl:message>
-        <xsl:variable name="matching-errors" select="$errors/errors/errorInfo[ref = $currName]"/>
+        <xsl:variable name="matching-errors" select="$errors//errorInfo[ref = $currName]"/>
         <xsl:variable name="classes">
             <xsl:if test="@class">
                 <xsl:value-of select="@class"/><xsl:text> </xsl:text>
@@ -45,13 +47,14 @@
             </xsl:for-each>
         </xsl:variable>
 
-        <xsl:message><xsl:value-of select="$classes"/></xsl:message>
+        <xsl:message>classes:'<xsl:value-of select="$classes"/>'</xsl:message>
 
         <xsl:copy>
             <xsl:copy-of select="@*[not(name()='class')]"/>
             <xsl:attribute name="class" select="$classes"/>
             <xsl:apply-templates/>
         </xsl:copy>
+        <div class="alert alert-danger"></div>
     </xsl:template>
 
     <xsl:template match="@*|node()|text()">

@@ -160,6 +160,23 @@ public class ModelGenerator {
         return outputStream;
     }
 
+    public ByteArrayOutputStream mixinXMLErrors(org.w3c.dom.Document errors) throws XFormsConfigException, TransformerException, IOException {
+        String styles = Config.getInstance().getProperty("error-transform");
+        Transformer transformer = this.transformerService.getTransformerByName(styles);
+        org.w3c.dom.Document htmlDoc = getSanitizedHtml();
+        DOMUtil.prettyPrintDOM(htmlDoc);
+
+        transformer.setParameter("errors", new DOMSource(errors.getDocumentElement()));
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+
+        StreamResult result = new StreamResult(outputStream);
+//        DOMResult result = new DOMResult();
+        transformer.transform(new DOMSource(htmlDoc), result);
+//        DOMUtil.prettyPrintDOM(result.getNode());
+        return outputStream;
+    }
+
     /**
      * Parses a string containing HTML5 and transforms it into a semantically equivalent XForms model document
      * @param html5

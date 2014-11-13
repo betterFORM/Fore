@@ -205,6 +205,8 @@ public class WebFactory {
                     URI IncludeDocument = getXsltURI(xsltPath,"include.xsl");
                     transformerService.getTransformer(IncludeDocument);
                 }
+                URI htmlErrorTransformer = getXsltURI(xsltPath,"mixinErrors.xsl");
+                transformerService.getTransformer(htmlErrorTransformer);
             }
             catch (Exception e) {
                 throw new XFormsConfigException(e);

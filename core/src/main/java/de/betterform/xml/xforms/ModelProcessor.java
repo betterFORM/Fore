@@ -20,7 +20,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.events.Event;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -142,6 +145,10 @@ public class ModelProcessor extends AbstractProcessorDecorator {
 */
         return xml;
 
+    }
+    public Document serializeAsDOM() throws IOException, SAXException, ParserConfigurationException {
+        String result = serialize();
+        return DOMUtil.parseString(result,false,false);
     }
 
     /**
