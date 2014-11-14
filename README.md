@@ -8,6 +8,10 @@ tbd.
 ## When should you use it (usage scenarios)?
 tbd.
 
+## How does it work?
+
+![ModelValidator](doc/modelvalidator.png)
+
 ## Requirements
 tbd.
 
