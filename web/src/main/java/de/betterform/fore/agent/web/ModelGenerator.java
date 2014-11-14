@@ -44,6 +44,7 @@ public class ModelGenerator {
     private CachingTransformerService transformerService;
     private WebFactory webFactory;
     private String referer;
+    private boolean cached=false;
 
     public ModelGenerator(){
     }
@@ -52,12 +53,10 @@ public class ModelGenerator {
         return htmlFilePath;
     }
 
-    //todo: can probably be refactored to use less arguments
-
     /**
      * resolve the pathes for input HTML and generated model and generates XForms model (if needed).
      *
-     * @param request a http request with form data
+     * @param request a http form submit request
      * @param cachingTransformerService used to cache XSLT stylesheets and create transformers
      * @param webFactory
      * @return the XForms model for the HTML input
@@ -69,8 +68,7 @@ public class ModelGenerator {
      * @throws SAXException
      */
     public Node generateModel(HttpServletRequest request,
-                              CachingTransformerService
-                                      cachingTransformerService,
+                              CachingTransformerService cachingTransformerService,
                               WebFactory webFactory)
             throws URISyntaxException, TransformerException, XFormsConfigException, IOException, ParserConfigurationException, SAXException {
         this.request = request;
@@ -97,52 +95,43 @@ public class ModelGenerator {
             DOMResult domResult = generateModel(reqUri, data, domDoc);
             //store it
             String xm = DOMUtil.serializeToString((org.w3c.dom.Document) domResult.getNode());
-            FileUtils.writeStringToFile(xformModelFile, xm);
+            FileUtils.writeStringToFile(xformModelFile, xm, "UTF-8",false);
             return domResult.getNode();
         }else{
+            cached=true;
             return DOMUtil.parseXmlFile(xformModelFile.getAbsoluteFile(),true,false);
         }
     }
 
+    /**
+     * If model has already been generated this returns true
+     * @return true if the model already exists. False otherwise.
+     */
+    public boolean isCached() {
+        return cached;
+    }
+
+    /**
+     * parse HTML5 and return wellformed (XHTML) HTML for it.
+     * @return returns a W3C document for incoming (potentially incomplete and non-wellformed) HTML.
+     * @throws IOException
+     */
     private org.w3c.dom.Document getSanitizedHtml() throws IOException {
         URL uri = new URL(referer);
         Document doc = Jsoup.parse(uri, 1000);
         return DOMBuilder.jsoup2DOM(doc);
     }
 
-    private File getModelFile() {
-        File htmlFile = new File(htmlFilePath);
-        File parentFile = htmlFile.getParentFile();
-        String fileName = htmlFile.getName();
-        String baseName = fileName.substring(0,fileName.indexOf("."));
-        String xfmFileName = baseName + ".xfm";
-        return new File(parentFile,xfmFileName);
-    }
-
-    private String getAbsoluteHTMLFilePath(String referer) {
-        String contextname = request.getContextPath();
-        int pos = referer.indexOf(contextname);
-        String relPath = referer.substring(pos+contextname.length());
-        String absPath=null;
-        try {
-            absPath = WebFactory.getRealPath(relPath,webFactory.getServletContext());
-        } catch (XFormsConfigException e) {
-            e.printStackTrace();
-        }
-        return absPath;
-    }
-
-    private DOMResult generateModel(String reqUri, String data, org.w3c.dom.Document domDoc) throws XFormsConfigException, TransformerException {
-        //generate XForms Model for incoming HTML via XSLT
-        String styles = Config.getInstance().getProperty("preprocessor-transform");
-        Transformer transformer = this.transformerService.getTransformerByName(styles);
-        transformer.setParameter("data", data);
-        transformer.setParameter("submission",reqUri);
-        DOMResult domResult = new DOMResult();
-        transformer.transform(new DOMSource(domDoc), domResult);
-        return domResult;
-    }
-
+    /**
+     * takes errorinfo XML as string, transform it and return the full HTML file with error-information as a stream.
+     * Errors will be output as a set of CSS classes on the respective control.
+     *
+     * @param errorXML the error information (serialized from ErrorInfo objects) as a XML string
+     * @return complete HTML document with error information as CSS classes
+     * @throws XFormsConfigException
+     * @throws TransformerException
+     * @throws IOException
+     */
     public ByteArrayOutputStream mixinErrors(String errorXML) throws XFormsConfigException, TransformerException, IOException {
         String styles = Config.getInstance().getProperty("error-transform");
         Transformer transformer = this.transformerService.getTransformerByName(styles);
@@ -220,5 +209,40 @@ public class ModelGenerator {
         }
         return formData.toString();
     }
+
+    private File getModelFile() {
+        File htmlFile = new File(htmlFilePath);
+        File parentFile = htmlFile.getParentFile();
+        String fileName = htmlFile.getName();
+        String baseName = fileName.substring(0,fileName.indexOf("."));
+        String xfmFileName = baseName + ".xfm";
+        return new File(parentFile,xfmFileName);
+    }
+
+    private String getAbsoluteHTMLFilePath(String referer) {
+        String contextname = request.getContextPath();
+        int pos = referer.indexOf(contextname);
+        String relPath = referer.substring(pos+contextname.length());
+        String absPath=null;
+        try {
+            absPath = WebFactory.getRealPath(relPath,webFactory.getServletContext());
+        } catch (XFormsConfigException e) {
+            e.printStackTrace();
+        }
+        return absPath;
+    }
+
+    private DOMResult generateModel(String reqUri, String data, org.w3c.dom.Document domDoc) throws XFormsConfigException, TransformerException {
+        //generate XForms Model for incoming HTML via XSLT
+        String styles = Config.getInstance().getProperty("preprocessor-transform");
+        Transformer transformer = this.transformerService.getTransformerByName(styles);
+        transformer.setParameter("data", data);
+        transformer.setParameter("submission",reqUri);
+        DOMResult domResult = new DOMResult();
+        transformer.transform(new DOMSource(domDoc), domResult);
+        return domResult;
+    }
+
+
 
 }

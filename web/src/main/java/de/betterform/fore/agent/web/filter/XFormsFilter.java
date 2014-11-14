@@ -325,7 +325,8 @@ public class XFormsFilter implements Filter {
                         response(response, bufResponse);
                     }else{
                         //html input processing
-                        Node node = ModelGenerator.html2Xforms(bufResponse.getDataAsString(), (CachingTransformerService) this.filterConfig.getServletContext().getAttribute(TransformerService.TRANSFORMER_SERVICE));
+                        Node node = ModelGenerator.html2Xforms(bufResponse.getDataAsString(),
+                                                                (CachingTransformerService) this.filterConfig.getServletContext().getAttribute(TransformerService.TRANSFORMER_SERVICE));
                         generateUI=false;
                         //store into request attribute that will be picked up during xforms processor init (setXForms)
                         request.setAttribute(WebFactory.XFORMS_NODE, node);

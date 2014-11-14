@@ -324,7 +324,7 @@
     </login-config>
 -->
     <listener>
-        <listener-class>de.betterform.agent.web.servlet.BfServletContextListener</listener-class>
+        <listener-class>de.betterform.fore.agent.web.servlet.BfServletContextListener</listener-class>
     </listener>
 </web-app>
 

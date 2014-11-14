@@ -31,6 +31,27 @@
         </xsl:copy>
     </xsl:template>
 
+
+    <xsl:template match="head">
+        <xsl:copy>
+            <xsl:apply-templates/>
+            <style type="text/css">
+                input.required-failed ~ span.fore-required:after{
+                    content:attr(title);
+                    color:red;
+                }
+                input.constraint-failed ~ span.fore-constraint:after{
+                    content:attr(title);
+                    color:red;
+                }
+                input.type-failed ~ span.fore-type:after{
+                    content:attr(title);
+                    color:red;
+                }
+            </style>
+        </xsl:copy>
+    </xsl:template>
+
     <xsl:template match="*[@name]">
 
 
@@ -54,7 +75,6 @@
             <xsl:attribute name="class" select="$classes"/>
             <xsl:apply-templates/>
         </xsl:copy>
-        <div class="alert alert-danger"></div>
     </xsl:template>
 
     <xsl:template match="@*|node()|text()">
