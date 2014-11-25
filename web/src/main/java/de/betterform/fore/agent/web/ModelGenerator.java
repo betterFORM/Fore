@@ -99,7 +99,9 @@ public class ModelGenerator {
             return domResult.getNode();
         }else{
             cached=true;
-            return DOMUtil.parseXmlFile(xformModelFile.getAbsoluteFile(),true,false);
+            org.w3c.dom.Document xModel = DOMUtil.parseXmlFile(xformModelFile.getAbsoluteFile(),true,false);
+//            DOMUtil.prettyPrintDOM(xModel);
+            return updateModel(data,xModel).getNode();
         }
     }
 
@@ -243,6 +245,15 @@ public class ModelGenerator {
         return domResult;
     }
 
+    private DOMResult updateModel(String data, org.w3c.dom.Document domDoc) throws XFormsConfigException, TransformerException {
+        //generate XForms Model for incoming HTML via XSLT
+        String styles = Config.getInstance().getProperty("update-transform");
+        Transformer transformer = this.transformerService.getTransformerByName(styles);
+        transformer.setParameter("data", data);
+        DOMResult domResult = new DOMResult();
+        transformer.transform(new DOMSource(domDoc), domResult);
+        return domResult;
+    }
 
 
 }

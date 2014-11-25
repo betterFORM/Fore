@@ -101,7 +101,7 @@
 -->
     <servlet>
         <servlet-name>error</servlet-name>
-        <servlet-class>de.betterform.agent.web.servlet.ErrorServlet</servlet-class>
+        <servlet-class>de.betterform.fore.agent.web.servlet.ErrorServlet</servlet-class>
     </servlet>
 
 
@@ -113,7 +113,7 @@
 
     <servlet>
         <servlet-name>ResponseServlet</servlet-name>
-        <servlet-class>de.betterform.agent.web.servlet.FormResponseServlet</servlet-class>
+        <servlet-class>de.betterform.fore.agent.web.servlet.FormResponseServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -188,7 +188,7 @@
 
     <servlet>
         <servlet-name>inspector</servlet-name>
-        <servlet-class>de.betterform.agent.web.servlet.XFormsInspectorServlet</servlet-class>
+        <servlet-class>de.betterform.fore.agent.web.servlet.XFormsInspectorServlet</servlet-class>
     </servlet>
 
     
@@ -209,7 +209,7 @@
     -->
     <servlet>
         <servlet-name>ResourceServlet</servlet-name>
-        <servlet-class>de.betterform.agent.web.resources.ResourceServlet</servlet-class>
+        <servlet-class>de.betterform.fore.agent.web.resources.ResourceServlet</servlet-class>
         <init-param>
             <param-name>caching</param-name>
             <param-value>@CACHING@</param-value>
@@ -217,16 +217,16 @@
     </servlet>
     <servlet>
         <servlet-name>PlainHtml</servlet-name>
-        <servlet-class>de.betterform.agent.web.servlet.PlainHtmlServlet</servlet-class>
+        <servlet-class>de.betterform.fore.agent.web.servlet.PlainHtmlServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ViewServlet</servlet-name>
-        <servlet-class>de.betterform.agent.web.servlet.ViewServlet</servlet-class>
+        <servlet-class>de.betterform.fore.agent.web.servlet.ViewServlet</servlet-class>
     </servlet>
 
     <servlet>
         <servlet-name>UploadServlet</servlet-name>
-        <servlet-class>de.betterform.agent.web.servlet.UploadServlet</servlet-class>
+        <servlet-class>de.betterform.fore.agent.web.servlet.UploadServlet</servlet-class>
     </servlet>
 
 <!--
@@ -292,7 +292,7 @@
 
       <servlet>
         <servlet-name>FileLister</servlet-name>
-        <servlet-class>de.betterform.agent.web.servlet.FileLister</servlet-class>
+        <servlet-class>de.betterform.fore.agent.web.servlet.FileLister</servlet-class>
     </servlet>
 
      <servlet-mapping>
@@ -324,7 +324,7 @@
     </login-config>
 -->
     <listener>
-        <listener-class>de.betterform.agent.web.servlet.BfServletContextListener</listener-class>
+        <listener-class>de.betterform.fore.agent.web.servlet.BfServletContextListener</listener-class>
     </listener>
 </web-app>
 

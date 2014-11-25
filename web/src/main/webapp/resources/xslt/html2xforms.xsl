@@ -88,8 +88,7 @@
                 <xsl:variable name="options" select="$this//datalist[@id eq $instance-id]"/>
 
                 <xsl:element name="xf:instance" namespace="http://www.w3.org/2002/xforms">
-                    <xsl:attribute name="id">i-<xsl:value-of select="$instance-id"/>
-                    </xsl:attribute>
+                    <xsl:attribute name="id">i-<xsl:value-of select="$instance-id"/></xsl:attribute>
                     <xsl:element name="data" namespace="">
                         <xsl:for-each select="$options/option">
                             <xsl:element name="option" namespace="">

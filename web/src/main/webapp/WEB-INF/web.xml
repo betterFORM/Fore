@@ -209,7 +209,7 @@
     -->
     <servlet>
         <servlet-name>ResourceServlet</servlet-name>
-        <servlet-class>de.betterform.agent.web.resources.ResourceServlet</servlet-class>
+        <servlet-class>de.betterform.fore.agent.web.resources.ResourceServlet</servlet-class>
         <init-param>
             <param-name>caching</param-name>
             <param-value>false</param-value>
@@ -226,7 +226,7 @@
 
     <servlet>
         <servlet-name>UploadServlet</servlet-name>
-        <servlet-class>de.betterform.agent.web.servlet.UploadServlet</servlet-class>
+        <servlet-class>de.betterform.fore.agent.web.servlet.UploadServlet</servlet-class>
     </servlet>
 
 <!--
@@ -292,7 +292,7 @@
 
       <servlet>
         <servlet-name>FileLister</servlet-name>
-        <servlet-class>de.betterform.agent.web.servlet.FileLister</servlet-class>
+        <servlet-class>de.betterform.fore.agent.web.servlet.FileLister</servlet-class>
     </servlet>
 
      <servlet-mapping>

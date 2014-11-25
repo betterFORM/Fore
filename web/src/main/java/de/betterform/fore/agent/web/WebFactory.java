@@ -176,6 +176,7 @@ public class WebFactory {
         String xsltPath = WebProcessor.RESOURCE_DIR + "xslt/";
         String xsltDefault = Config.getInstance().getProperty("ui-transform");
         String html2xforms = Config.getInstance().getProperty("preprocessor-transform");
+        String updateTransform = Config.getInstance().getProperty("update-transform");
 
 
 //        if (xsltCacheEnabled) {
@@ -196,6 +197,9 @@ public class WebFactory {
 
                 URI html2xformsTransformer = getXsltURI(xsltPath,html2xforms);
                 transformerService.getTransformer(html2xformsTransformer);
+
+                URI modelUpdateTransformer = getXsltURI(xsltPath,updateTransform);
+                transformerService.getTransformer(modelUpdateTransformer);
 
                 if(Config.getInstance().getProperty("betterform.debug-allowed").equals("true")){
                     URI highlightingDocument = getXsltURI(xsltPath,"highlightDocument.xsl");
