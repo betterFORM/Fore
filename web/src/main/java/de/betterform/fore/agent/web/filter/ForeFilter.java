@@ -27,7 +27,10 @@ import de.betterform.fore.xml.xslt.impl.CachingTransformerService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.exist.EXistException;
+import org.exist.http.servlets.Authenticator;
 import org.exist.security.PermissionDeniedException;
+import org.exist.security.Subject;
+import org.exist.storage.BrokerPool;
 import org.infinispan.Cache;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -56,13 +59,17 @@ import java.util.Map;
  * @serial 2007-02-19T13:51
  */
 @SuppressWarnings({"JavadocReference"})
-public class XFormsFilter implements Filter {
-    private static final Log LOG = LogFactory.getLog(XFormsFilter.class);
+public class ForeFilter implements Filter {
+    private static final Log LOG = LogFactory.getLog(ForeFilter.class);
     private static final String USERAGENT = "dojo";
     protected WebFactory webFactory;
 
     protected String defaultRequestEncoding = "UTF-8";
     private FilterConfig filterConfig;
+    private BrokerPool pool;
+    private Subject defaultUser;
+    private Authenticator authenticator;
+
 
     /**
      * Filter initialisation
@@ -75,7 +82,7 @@ public class XFormsFilter implements Filter {
         webFactory = new WebFactory();
         webFactory.setServletContext(filterConfig.getServletContext());
         try {
-            webFactory.initConfiguration(XFormsFilter.USERAGENT);
+            webFactory.initConfiguration(ForeFilter.USERAGENT);
             defaultRequestEncoding = webFactory.getConfig().getProperty("defaultRequestEncoding", defaultRequestEncoding);
             webFactory.initLogging(this.getClass());
             String realPath = WebFactory.getRealPath(".", this.filterConfig.getServletContext());
@@ -171,18 +178,21 @@ public class XFormsFilter implements Filter {
             doSubmissionReplaceAllXForms(request, response, session);
         } else if (request.getContentType() != null && request.getContentType().contains("form") && "POST".equalsIgnoreCase(request.getMethod())) {
             Node node = null;
-            ExistBroker broker = new ExistBroker(request, response, session);
+            ExistBroker broker = new ExistBroker(request,response,session);
             try {
                 broker.init();
             } catch (EXistException e) {
-                sendError(request, response, session);
+                sendError(request,response,session);
             }
             ExistModelGenerator generator = new ExistModelGenerator(broker);
             try {
                 String referredDocument = request.getHeader("Referer");
 
 
-                node = generator.generateModel(referredDocument, (CachingTransformerService) this.filterConfig.getServletContext().getAttribute(TransformerService.TRANSFORMER_SERVICE));
+
+
+
+                node = generator.generateModel(referredDocument,(CachingTransformerService) this.filterConfig.getServletContext().getAttribute(TransformerService.TRANSFORMER_SERVICE));
                 DOMUtil.prettyPrintDOM(node);
             } catch (TransformerException e) {
                 returnErrorPage(request, response, session, e);
@@ -274,7 +284,7 @@ public class XFormsFilter implements Filter {
             }
 
             //pass to request object
-            request.setAttribute(WebFactory.USER_AGENT, XFormsFilter.USERAGENT);
+            request.setAttribute(WebFactory.USER_AGENT, ForeFilter.USERAGENT);
 
 
             /*
@@ -471,7 +481,7 @@ public class XFormsFilter implements Filter {
      * @param request     HttpServletRequest
      * @param bufResponse The buffered response
      * @return true if the response contains an XForm, false otherwise
-     * @throws UnsupportedEncodingException
+     * @throws java.io.UnsupportedEncodingException
      */
     protected boolean handleResponseBody(HttpServletRequest request, BufferedHttpServletResponseWrapper bufResponse) throws UnsupportedEncodingException {
 
@@ -602,7 +612,7 @@ public class XFormsFilter implements Filter {
      *
      * @param content The HTML page content
      * @return The content without the DOCTYPE PI
-     * @throws UnsupportedEncodingException
+     * @throws java.io.UnsupportedEncodingException
      */
     private byte[] removeDocumentTypePI(byte[] content) throws UnsupportedEncodingException {
         String buf = new String(content, "ISO-8859-1");
@@ -623,7 +633,7 @@ public class XFormsFilter implements Filter {
      *
      * @param content The HTML page content
      * @return The content with the corrected xforms:instance
-     * @throws UnsupportedEncodingException
+     * @throws java.io.UnsupportedEncodingException
      */
     private byte[] correctInstanceXMLNS(byte[] content) throws UnsupportedEncodingException {
         String buffer = new String(content, "UTF-8");
@@ -642,7 +652,7 @@ public class XFormsFilter implements Filter {
      *
      * @param request  the Servlet request
      * @param response the Servlet response
-     * @throws IOException if something basic goes wrong
+     * @throws java.io.IOException if something basic goes wrong
      */
     protected void doSubmissionReplaceAll(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Map submissionResponse = handleResponseReplaceAll(request, response);
@@ -669,7 +679,7 @@ public class XFormsFilter implements Filter {
 
         if (submissionResponse != null) {
             //Set USERAGENT
-            request.setAttribute(WebFactory.USER_AGENT, XFormsFilter.USERAGENT);
+            request.setAttribute(WebFactory.USER_AGENT, ForeFilter.USERAGENT);
             request.setAttribute(WebFactory.XFORMS_INPUTSTREAM, submissionResponse.get("body"));
             processXForms(request, response, session, false);
             return;

@@ -139,7 +139,7 @@
     <!-- **************************************** BUILDING JAR **************************************** -->
     <!-- **************************************** BUILDING JAR **************************************** -->
     <target name="package" depends="compile" description="create jar file(s)">
-        <copy file="${basedir}/target/classes/de/betterform/xml/config/default.xml" tofile="${target}/betterform-config.xml"
+        <copy file="${basedir}/target/classes/de/betterform/fore/xml/config/default.xml" tofile="${target}/betterform-config.xml"
                 description="copy betterForm config file"/>
 
         <echo />
