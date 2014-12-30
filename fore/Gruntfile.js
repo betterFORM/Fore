@@ -81,8 +81,25 @@ module.exports = function(grunt) {
                     dest: '<%= vars.webTarget %>/components/'
                 }
             }
+        },
+
+        zip: {
+            xar: {
+                src: [
+                    'forms/*.xhtml'
+                ],
+                dest: 'build/fore-demo.xar'
+            }
         }
     });
+
+    /*
+     This task must be used when deploying dev version of fore into ../web/target
+     */
+    grunt.registerTask('build-xar', [
+        'zip'
+    ]);
+
 
     /*
     This task must be used when deploying dev version of fore into ../web/target

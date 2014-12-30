@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<meta xmlns="http://exist-db.org/xquery/repo">
+    <description>showing validation with ModelValidator</description>
+    <author>Joern Turner</author>
+    <website/>
+    <status>alpha</status>
+    <license>BSD-2-Clause</license>
+    <copyright>true</copyright>
+    <type>application</type>
+    <target>ModelValidatorDemo</target>
+    <prepare>pre-install.xql</prepare>
+    <finish/>
+    <deployed/>
+</meta>

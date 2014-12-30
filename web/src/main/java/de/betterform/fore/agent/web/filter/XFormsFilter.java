@@ -28,6 +28,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.exist.EXistException;
 import org.exist.security.PermissionDeniedException;
+import org.exist.util.LockException;
 import org.infinispan.Cache;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -182,7 +183,10 @@ public class XFormsFilter implements Filter {
                 String referredDocument = request.getHeader("Referer");
 
 
-                node = generator.generateModel(referredDocument, (CachingTransformerService) this.filterConfig.getServletContext().getAttribute(TransformerService.TRANSFORMER_SERVICE));
+                node = generator.generateModel(referredDocument,
+                        (CachingTransformerService) this.filterConfig.getServletContext().getAttribute(TransformerService.TRANSFORMER_SERVICE),
+                        getRequestParamsAsStringEncoded(request),
+                        request.getRequestURI());
                 DOMUtil.prettyPrintDOM(node);
             } catch (TransformerException e) {
                 returnErrorPage(request, response, session, e);
@@ -192,6 +196,10 @@ public class XFormsFilter implements Filter {
                 returnErrorPage(request, response, session, e);
             } catch (EXistException e) {
                 returnErrorPage(request, response, session, e);
+            } catch (LockException e) {
+                e.printStackTrace();
+            } catch (SAXException e) {
+                e.printStackTrace();
             }
 
             try {
@@ -249,6 +257,10 @@ public class XFormsFilter implements Filter {
             } catch (XFormsException e) {
                 sendError(request, response, session);
             } catch (TransformerException e) {
+                e.printStackTrace();
+            } catch (PermissionDeniedException e) {
+                e.printStackTrace();
+            } catch (EXistException e) {
                 e.printStackTrace();
             }
         } else {
@@ -328,6 +340,27 @@ public class XFormsFilter implements Filter {
             }
         }
     }
+    private String getRequestParamsAsStringEncoded(HttpServletRequest request) {
+        Enumeration<String> params = request.getParameterNames();
+        StringBuffer formData = new StringBuffer();
+        while(params.hasMoreElements()){
+            String name = params.nextElement();
+            String value = request.getParameter(name);
+            formData.append(name);
+            formData.append(":");
+            if(value != null){
+                formData.append(value);
+            }else{
+                formData.append("");
+            }
+            formData.append(";");
+        }
+        if(LOG.isDebugEnabled()){
+            LOG.debug("data send by form: " + formData.toString());
+        }
+        return formData.toString();
+    }
+
 
     private void sendError(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException {
         session.setAttribute("betterform.referer", request.getRequestURL());

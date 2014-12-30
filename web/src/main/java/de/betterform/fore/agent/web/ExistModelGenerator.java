@@ -10,14 +10,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.exist.EXistException;
 import org.exist.security.PermissionDeniedException;
+import org.exist.util.LockException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
@@ -28,9 +26,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Enumeration;
 
 
 /**
@@ -43,14 +39,12 @@ public class ExistModelGenerator {
     private static final Log LOG = LogFactory.getLog(ExistModelGenerator.class);
     private final ExistBroker broker;
     private String htmlFilePath;
-    private HttpServletRequest request;
     private CachingTransformerService transformerService;
-    private WebFactory webFactory;
     private String referer;
-    private boolean cached=false;
+    private boolean cached = false;
 
-    public ExistModelGenerator(ExistBroker broker){
-        this.broker=broker;
+    public ExistModelGenerator(ExistBroker broker) {
+        this.broker = broker;
     }
 
     public String getHtmlFilePath() {
@@ -68,54 +62,42 @@ public class ExistModelGenerator {
      * @throws javax.xml.parsers.ParserConfigurationException
      * @throws org.xml.sax.SAXException
      */
-    public Node generateModel(String referredDocument,CachingTransformerService cachingTransformerService)
-            throws PermissionDeniedException, IOException, EXistException, TransformerException, XFormsConfigException {
-        this.request = request;
+    public Node generateModel(String referredDocument,
+                              CachingTransformerService cachingTransformerService,
+                              String data,
+                              String reqUri)
+            throws PermissionDeniedException, IOException, EXistException, TransformerException, XFormsConfigException, LockException, SAXException {
         this.transformerService = cachingTransformerService;
-        this.webFactory = webFactory;
 
         // ???????????????????????? resolve and get file from exist ??????????????????????????
-//        htmlFilePath = getAbsoluteHTMLFilePath(referer);
+        this.referer = referredDocument;
+        org.w3c.dom.Document formDoc = broker.getDocument(this.referer);
 
-        org.w3c.dom.Document foreModel = broker.getDocument(referredDocument);
-        DOMUtil.prettyPrintDOM(foreModel);
-
-        String data = getRequestParams();
         LOG.debug("Data: " + data);
 
-        if(foreModel == null){
-            //Parse original HTML and sanitize to XHTML
-//            org.w3c.dom.Document domDoc = getSanitizedHtml();
-            String reqUri = request.getRequestURI();
-            DOMResult domResult = generateModel(reqUri, data, foreModel);
+        String foreModelPath = referredDocument.substring(1,referredDocument.indexOf(".")) + ".xml";
+        org.w3c.dom.Document foreModel = broker.getDocument(foreModelPath);
+
+        if (foreModel == null) {
+            DOMResult domResult = generateModel(reqUri, data, formDoc);
             DOMUtil.prettyPrintDOM(domResult.getNode());
 
             //store it
-            broker.storeDocument((org.w3c.dom.Document) domResult.getNode());
+            broker.storeDocument((org.w3c.dom.Document) domResult.getNode(),foreModelPath);
             return domResult.getNode();
-        }else{
-            cached=true;
-            return updateModel(data,foreModel).getNode();
+        } else {
+            cached = true;
+            return updateModel(data, foreModel).getNode();
         }
     }
 
     /**
      * If model has already been generated this returns true
+     *
      * @return true if the model already exists. False otherwise.
      */
     public boolean isCached() {
         return cached;
-    }
-
-    /**
-     * parse HTML5 and return wellformed (XHTML) HTML for it.
-     * @return returns a W3C document for incoming (potentially incomplete and non-wellformed) HTML.
-     * @throws java.io.IOException
-     */
-    private org.w3c.dom.Document getSanitizedHtml() throws IOException {
-        URL uri = new URL(referer);
-        Document doc = Jsoup.parse(uri, 1000);
-        return DOMBuilder.jsoup2DOM(doc);
     }
 
     /**
@@ -128,10 +110,10 @@ public class ExistModelGenerator {
      * @throws javax.xml.transform.TransformerException
      * @throws java.io.IOException
      */
-    public ByteArrayOutputStream mixinErrors(String errorXML) throws XFormsConfigException, TransformerException, IOException {
+    public ByteArrayOutputStream mixinErrors(String errorXML) throws XFormsConfigException, TransformerException, IOException, EXistException, PermissionDeniedException {
         String styles = Config.getInstance().getProperty("error-transform");
         Transformer transformer = this.transformerService.getTransformerByName(styles);
-        org.w3c.dom.Document htmlDoc = getSanitizedHtml();
+        org.w3c.dom.Document htmlDoc = broker.getDocument(this.referer);
         DOMUtil.prettyPrintDOM(htmlDoc);
 
         transformer.setParameter("errors", new StreamSource(new StringReader(errorXML)));
@@ -145,10 +127,10 @@ public class ExistModelGenerator {
         return outputStream;
     }
 
-    public ByteArrayOutputStream mixinXMLErrors(org.w3c.dom.Document errors) throws XFormsConfigException, TransformerException, IOException {
+    public ByteArrayOutputStream mixinXMLErrors(org.w3c.dom.Document errors) throws XFormsConfigException, TransformerException, IOException, EXistException, PermissionDeniedException {
         String styles = Config.getInstance().getProperty("error-transform");
         Transformer transformer = this.transformerService.getTransformerByName(styles);
-        org.w3c.dom.Document htmlDoc = getSanitizedHtml();
+        org.w3c.dom.Document htmlDoc = broker.getDocument(this.referer);
         DOMUtil.prettyPrintDOM(htmlDoc);
 
         transformer.setParameter("errors", new DOMSource(errors.getDocumentElement()));
@@ -164,6 +146,7 @@ public class ExistModelGenerator {
 
     /**
      * Parses a string containing HTML5 and transforms it into a semantically equivalent XForms model document
+     *
      * @param html5
      * @param cachingTransformerService
      * @return
@@ -185,57 +168,12 @@ public class ExistModelGenerator {
         return null;
     }
 
-    private String getRequestParams() {
-        Enumeration<String> params = this.request.getParameterNames();
-        StringBuffer formData = new StringBuffer();
-        while(params.hasMoreElements()){
-            String name = params.nextElement();
-            String value = request.getParameter(name);
-            formData.append(name);
-            formData.append(":");
-            if(value != null){
-                formData.append(value);
-            }else{
-                formData.append("");
-            }
-            formData.append(";");
-        }
-        if(LOG.isDebugEnabled()){
-            LOG.debug("data send by form: " + formData.toString());
-        }
-        return formData.toString();
-    }
-
-    private File getModelFile() {
-        File htmlFile = new File(htmlFilePath);
-        File parentFile = htmlFile.getParentFile();
-        String fileName = htmlFile.getName();
-        String baseName = fileName.substring(0,fileName.indexOf("."));
-        String xfmFileName = baseName + ".xfm";
-        return new File(parentFile,xfmFileName);
-    }
-
-/*
-    private String getAbsoluteHTMLFilePath(String referer) {
-        String contextname = request.getContextPath();
-        int pos = referer.indexOf(contextname);
-        String relPath = referer.substring(pos+contextname.length());
-        String absPath=null;
-        try {
-            absPath = WebFactory.getRealPath(relPath,webFactory.getServletContext());
-        } catch (XFormsConfigException e) {
-            e.printStackTrace();
-        }
-        return absPath;
-    }
-*/
-
     private DOMResult generateModel(String reqUri, String data, org.w3c.dom.Document domDoc) throws XFormsConfigException, TransformerException {
         //generate XForms Model for incoming HTML via XSLT
         String styles = Config.getInstance().getProperty("preprocessor-transform");
         Transformer transformer = this.transformerService.getTransformerByName(styles);
         transformer.setParameter("data", data);
-        transformer.setParameter("submission",reqUri);
+        transformer.setParameter("submission", reqUri);
         DOMResult domResult = new DOMResult();
         transformer.transform(new DOMSource(domDoc), domResult);
         return domResult;

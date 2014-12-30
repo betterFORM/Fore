@@ -4,6 +4,8 @@ import de.betterform.fore.xml.dom.DOMUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.exist.EXistException;
+import org.exist.collections.Collection;
+import org.exist.collections.IndexInfo;
 import org.exist.dom.DocumentImpl;
 import org.exist.http.servlets.Authenticator;
 import org.exist.http.servlets.BasicAuthenticator;
@@ -17,15 +19,19 @@ import org.exist.storage.BrokerPool;
 import org.exist.storage.DBBroker;
 import org.exist.storage.lock.Lock;
 import org.exist.storage.txn.TransactionManager;
+import org.exist.storage.txn.Txn;
+import org.exist.util.LockException;
 import org.exist.xmldb.XmldbURI;
 import org.exist.xquery.XPathException;
 import org.exist.xquery.value.Sequence;
 import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.security.Principal;
 
@@ -75,7 +81,8 @@ public class ExistBroker {
         DocumentImpl resource = null;
 
         DBBroker dbbroker = getDBBroker();
-        final XmldbURI pathUri = XmldbURI.create(URLDecoder.decode(path, "UTF-8"));
+        final XmldbURI pathUri = getXmldbURI(path);
+
         resource = dbbroker.getXMLResource(pathUri, Lock.READ_LOCK);
 
         if(LOG.isDebugEnabled()){
@@ -85,9 +92,22 @@ public class ExistBroker {
         return resource;
     }
 
-    void storeDocument(Document model){
+    private XmldbURI getXmldbURI(String path) throws UnsupportedEncodingException {
+        String xmldbPath = path.substring( path.indexOf("/exist")+6 ,path.length() );
+        return XmldbURI.create(URLDecoder.decode(xmldbPath, "UTF-8"));
+    }
+
+
+    void storeDocument(Document model,String path) throws IOException, EXistException, PermissionDeniedException, LockException, SAXException {
         TransactionManager transactionManager = this.pool.getTransactionManager();
-        //todo: implement
+        XmldbURI collectionname = getXmldbURI(path.substring(1, path.lastIndexOf('/')));
+        Collection collection = getDBBroker().getCollection(collectionname);
+        Txn transaction = transactionManager.beginTransaction();
+
+        IndexInfo info = collection.validateXMLResource(transaction, getDBBroker(),getXmldbURI(path), model);
+        collection.store(transaction, getDBBroker(), info, model, false);
+
+        transactionManager.commit(transaction);
     }
 
     DBBroker getDBBroker() throws IOException, EXistException {
