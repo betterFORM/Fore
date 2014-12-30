@@ -1,5 +1,6 @@
 package de.betterform.fore.agent.web;
 
+import de.betterform.fore.connector.util.URIUtil;
 import de.betterform.fore.xml.dom.DOMUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,7 +33,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLDecoder;
+import java.nio.charset.Charset;
 import java.security.Principal;
 
 /**
@@ -89,6 +93,9 @@ public class ExistBroker {
             LOG.debug("ExistBroker getDocument: " + path);
             DOMUtil.prettyPrintDOM(resource);
         }
+        if(resource!=null) {
+            resource.getUpdateLock().release(Lock.READ_LOCK);
+        }
         return resource;
     }
 
@@ -98,16 +105,27 @@ public class ExistBroker {
     }
 
 
-    void storeDocument(Document model,String path) throws IOException, EXistException, PermissionDeniedException, LockException, SAXException {
+    void storeDocument(Document model, String path) throws IOException, EXistException, PermissionDeniedException, LockException, SAXException, URISyntaxException {
         TransactionManager transactionManager = this.pool.getTransactionManager();
-        XmldbURI collectionname = getXmldbURI(path.substring(1, path.lastIndexOf('/')));
-        Collection collection = getDBBroker().getCollection(collectionname);
-        Txn transaction = transactionManager.beginTransaction();
+        Txn tx = transactionManager.beginTransaction();
 
-        IndexInfo info = collection.validateXMLResource(transaction, getDBBroker(),getXmldbURI(path), model);
-        collection.store(transaction, getDBBroker(), info, model, false);
+        String file = URIUtil.getLastSegmentFromPath(new URI(path));
+        String collectionPath = URIUtil.getPathWithoutLastSegment(new URI(path));
+        //hack it
+        String webContextName = request.getContextPath();
+        if(collectionPath.startsWith(webContextName)){
+            collectionPath = collectionPath.substring(webContextName.length());
+        }
 
-        transactionManager.commit(transaction);
+
+        Collection collection = getDBBroker().getCollection(XmldbURI.createInternal(collectionPath));
+
+        String contents = DOMUtil.serializeToString(model);
+
+        IndexInfo info = collection.validateXMLResource(tx, getDBBroker(), XmldbURI.createInternal(file), contents);
+        collection.store(tx, getDBBroker(), info, contents, false);
+
+        transactionManager.commit(tx);
     }
 
     DBBroker getDBBroker() throws IOException, EXistException {

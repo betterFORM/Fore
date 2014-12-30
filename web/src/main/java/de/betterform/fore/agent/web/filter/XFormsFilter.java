@@ -197,9 +197,11 @@ public class XFormsFilter implements Filter {
             } catch (EXistException e) {
                 returnErrorPage(request, response, session, e);
             } catch (LockException e) {
-                e.printStackTrace();
+                returnErrorPage(request, response, session, e);
             } catch (SAXException e) {
-                e.printStackTrace();
+                returnErrorPage(request, response, session, e);
+            } catch (URISyntaxException e) {
+                returnErrorPage(request, response, session, e);
             }
 
             try {

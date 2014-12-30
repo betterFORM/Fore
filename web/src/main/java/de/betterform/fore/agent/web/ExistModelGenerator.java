@@ -26,6 +26,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 
@@ -66,7 +67,7 @@ public class ExistModelGenerator {
                               CachingTransformerService cachingTransformerService,
                               String data,
                               String reqUri)
-            throws PermissionDeniedException, IOException, EXistException, TransformerException, XFormsConfigException, LockException, SAXException {
+            throws PermissionDeniedException, IOException, EXistException, TransformerException, XFormsConfigException, LockException, SAXException, URISyntaxException {
         this.transformerService = cachingTransformerService;
 
         // ???????????????????????? resolve and get file from exist ??????????????????????????
@@ -75,7 +76,7 @@ public class ExistModelGenerator {
 
         LOG.debug("Data: " + data);
 
-        String foreModelPath = referredDocument.substring(1,referredDocument.indexOf(".")) + ".xml";
+        String foreModelPath = referredDocument.substring(0,referredDocument.indexOf(".")) + ".xml";
         org.w3c.dom.Document foreModel = broker.getDocument(foreModelPath);
 
         if (foreModel == null) {
