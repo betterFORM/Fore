@@ -104,6 +104,7 @@ public class ModelProcessor extends AbstractProcessorDecorator {
                         }
                     }
                 }else if(XFormsEventNames.SUBMIT_ERROR.equalsIgnoreCase(type)){
+                    //todo : this must be propagated up -> changed into error to display to the user if the backend script fails
                     LOG.debug("XForms submit error");
                 }else if(XFormsEventNames.SUBMIT_DONE.equalsIgnoreCase(type)){
                     LOG.debug("XForms submit done");

@@ -117,11 +117,8 @@ public class ExistBroker {
             collectionPath = collectionPath.substring(webContextName.length());
         }
 
-
         Collection collection = getDBBroker().getCollection(XmldbURI.createInternal(collectionPath));
-
         String contents = DOMUtil.serializeToString(model);
-
         IndexInfo info = collection.validateXMLResource(tx, getDBBroker(), XmldbURI.createInternal(file), contents);
         collection.store(tx, getDBBroker(), info, contents, false);
 

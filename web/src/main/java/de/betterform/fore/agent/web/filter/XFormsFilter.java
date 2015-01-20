@@ -179,10 +179,8 @@ public class XFormsFilter implements Filter {
                 sendError(request, response, session);
             }
             ExistModelGenerator generator = new ExistModelGenerator(broker);
+            String referredDocument = request.getHeader("Referer");
             try {
-                String referredDocument = request.getHeader("Referer");
-
-
                 node = generator.generateModel(referredDocument,
                         (CachingTransformerService) this.filterConfig.getServletContext().getAttribute(TransformerService.TRANSFORMER_SERVICE),
                         getRequestParamsAsStringEncoded(request),
@@ -249,8 +247,13 @@ public class XFormsFilter implements Filter {
                     // mix errors back into original html document
                     ByteArrayOutputStream out = generator.mixinXMLErrors(errs);
 
-                    response.setContentLength(out.toByteArray().length);
-                    response.getOutputStream().write(out.toByteArray());
+                    //store form output with errors in session
+                    session.setAttribute("errors",out);
+                    response.sendRedirect(response.encodeRedirectURL(referredDocument));
+
+//                    response.setContentLength(out.toByteArray().length);
+//                    response.getOutputStream().write(out.toByteArray());
+
 
                     // may work one day but browser url still changes and resubmit will still cause error in modelgenerator.
 //                        request.getRequestDispatcher("forms/fore/html-plain-novalidate.html").include(request, response);
@@ -265,6 +268,12 @@ public class XFormsFilter implements Filter {
             } catch (EXistException e) {
                 e.printStackTrace();
             }
+        }else if ("GET".equalsIgnoreCase(request.getMethod()) && session.getAttribute("errors")!=null){
+            //there was an error response which is now requested
+            ByteArrayOutputStream out = (ByteArrayOutputStream) session.getAttribute("errors");
+            session.removeAttribute("errors");
+            response.setContentLength(out.toByteArray().length);
+            response.getOutputStream().write(out.toByteArray());
         } else {
             /* ########################### call filter chain / end point #################################### */
             /* ########################### call filter chain / end point #################################### */

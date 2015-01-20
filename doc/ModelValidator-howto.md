@@ -16,6 +16,7 @@ All packages starting with 'de.betterform' have been renamed to 'de.betterform.f
 
 ## Dependencies
 
+* all betterFORM core dependencies esp.
 * core/src/main/lib/jackson-*
 * woodstox-core-lgpl-4.2.0.jar
 * stax2-api-3.1.1.jar
@@ -26,7 +27,7 @@ All packages starting with 'de.betterform' have been renamed to 'de.betterform.f
 ## Using ModelValidator
 
 ModelValidator in eXistdb requires the use of xhtml-conform HTML documents at the moment. ModelValidator itself can
-handle HTML5 but there are still some restrictions using that with out-of-the-box eXistdb.
+handle HTML5 but there are still some restrictions using that with out-of-the-box with eXistdb.
 
 
 

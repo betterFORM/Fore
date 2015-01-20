@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-~ Copyright (c) 2012. betterFORM Project - http://www.betterform.de
-~ Licensed under the terms of BSD License
--->
-
 <xsl:stylesheet version="2.0"
-        xmlns=""
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
         xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
         xmlns:ev="http://www.w3.org/2001/xml-events"
         xmlns:xi="http://www.w3.org/2001/XInclude"
@@ -27,24 +23,24 @@
         <xsl:apply-templates/>
     </xsl:template>
 
-    <xsl:template match="@*|node()|text()">
-        <xsl:element name="{local-name()}" namespace="http://www.w3.org/1999/xhtml">
-            <xsl:copy-of select="@*"/>
-
-            <xsl:apply-templates/>
-        </xsl:element>
-
-        <!--
-                <xsl:copy>
-                        <xsl:namespace name="xf" select="'http://www.w3.org/2002/xforms'"/>
-                        <xsl:copy-of select="@*"/>
-
-                        <xsl:apply-templates/>
-                    </xsl:copy>
-                    -->
+    <xsl:template match="@* | node()">
+        <xsl:copy>
+            <xsl:apply-templates select="@* | node()"/>
+        </xsl:copy>
     </xsl:template>
 
-    <xsl:template match="body">
+    <!--
+        <xsl:template match="@*|node()|text()">
+            <xsl:element name="{local-name()}" namespace="http://www.w3.org/1999/xhtml">
+                <xsl:copy-of select="@*"/>
+
+                <xsl:apply-templates/>
+            </xsl:element>
+        </xsl:template>
+    -->
+
+    <xsl:template match="xhtml:body">
+        <xsl:message>matched body</xsl:message>
         <xsl:element name="{local-name()}" namespace="http://www.w3.org/1999/xhtml">
             <xsl:copy-of select="@*"/>
             <xsl:apply-templates select="*" mode="model"/>
@@ -68,16 +64,16 @@
         ###############################################################################################
     -->
 
-    <xsl:template match="form[@id]" mode="model">
+    <xsl:template match="xhtml:form[@id]" mode="model" priority="10">
         <xsl:variable name="form-id" select="@id"/>
-
+        <xsl:variable name="form" select="."/>
         <xsl:element name="xf:model" namespace="http://www.w3.org/2002/xforms">
             <xsl:attribute name="id">m-<xsl:value-of select="$form-id"/>
             </xsl:attribute>
 
             <xsl:element name="xf:instance" namespace="http://www.w3.org/2002/xforms">
                 <xsl:attribute name="id">i-default</xsl:attribute>
-                <xsl:element name="data" namespace="{namespace-uri()}">
+                <xsl:element name="data" namespace="">
                     <xsl:apply-templates select="*" mode="model"/>
                 </xsl:element>
             </xsl:element>
@@ -118,13 +114,14 @@
 
             <xsl:apply-templates select="*" mode="bind"/>
 
-            <xsl:element name="xf:submision" namespace="http://www.w3.org/2002/xforms">
-                <xsl:attribute name="id">s-<xsl:value-of select="@id"/>-default</xsl:attribute>
+            <xsl:element name="xf:submission" namespace="http://www.w3.org/2002/xforms">
+                <!--<xsl:attribute name="id">s-<xsl:value-of select="@id"/>-default</xsl:attribute>-->
+                <xsl:attribute name="id">s-default</xsl:attribute>
                 <xsl:attribute name="resource">
                     <xsl:value-of select="@action"/>
                 </xsl:attribute>
                 <xsl:attribute name="method">
-                    <xsl:variable name="method" select="if(exists(//form/@method)) then @method else 'GET'"/>
+                    <xsl:variable name="method" select="if(exists($form/@method)) then @method else 'GET'"/>
                     <xsl:value-of select="$method"/>
                 </xsl:attribute>
                 <xsl:attribute name="validate">true()</xsl:attribute>
@@ -169,23 +166,24 @@
     ###############################################################################################
     -->
 
-    <xsl:template match="*[@type='submit']" mode="submission" priority="10">
-        <xsl:choose>
-            <xsl:when test="string-length($data) != 0"/>
-            <xsl:otherwise>
-                <xsl:element name="xf:submission" namespace="http://www.w3.org/2002/xforms">
-                    <!-- ### just uses the first forms' action as submission uri -->
-                    <!-- todo: support multiple forms -->
-                    <!--<xsl:attribute name="id"><xsl:value-of select="concat(@id,'-submit')"/></xsl:attribute>-->
-                    <xsl:attribute name="resource"><xsl:value-of select="//form/@action"/></xsl:attribute>
-                    <xsl:attribute name="method">
-                        <xsl:variable name="method" select="if(exists(//form/@method)) then //form/@method else 'POST'"/>
-                        <xsl:value-of select="$method"/>
-                    </xsl:attribute>
-                </xsl:element>
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:template>
+    <!--
+        <xsl:template match="*[@type='submit']" mode="submission" priority="10">
+            <xsl:choose>
+                <xsl:when test="string-length($data) != 0"/>
+                <xsl:otherwise>
+                    <xsl:element name="xf:submission" namespace="http://www.w3.org/2002/xforms">
+                        &lt;!&ndash; todo: support multiple forms &ndash;&gt;
+                        <xsl:attribute name="id">s-default</xsl:attribute>
+                        <xsl:attribute name="resource"><xsl:value-of select="//form/@action"/></xsl:attribute>
+                        <xsl:attribute name="method">
+                            <xsl:variable name="method" select="if(exists(//form/@method)) then //form/@method else 'POST'"/>
+                            <xsl:value-of select="$method"/>
+                        </xsl:attribute>
+                    </xsl:element>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:template>
+    -->
 
     <!--
     ###############################################################################################
@@ -437,31 +435,33 @@
         </xsl:element>
     </xsl:template>
 
-    <xsl:template mode="ui" match="button">
-        <xsl:element name="xf:trigger" namespace="http://www.w3.org/2002/xforms">
-            <xsl:attribute name="id" select="@id"/>
-            <xsl:element name="xf:label">
-                <xsl:value-of select="text()"/>
-            </xsl:element>
-            <xsl:if test="@type='submit'">
-                <xsl:element name="xf:action" namespace="http://www.w3.org/2002/xforms">
-                    <xsl:element name="xf:send" namespace="http://www.w3.org/2002/xforms">
-                        <xsl:attribute name="submission"><xsl:value-of select="concat(@id,'-submit')"/></xsl:attribute>
-                    </xsl:element>
+    <!--
+        <xsl:template mode="ui" match="button">
+            <xsl:element name="xf:trigger" namespace="http://www.w3.org/2002/xforms">
+                <xsl:attribute name="id" select="@id"/>
+                <xsl:element name="xf:label">
+                    <xsl:value-of select="text()"/>
                 </xsl:element>
-            </xsl:if>
-        </xsl:element>
-    </xsl:template>
+                <xsl:if test="@type='submit'">
+                    <xsl:element name="xf:action" namespace="http://www.w3.org/2002/xforms">
+                        <xsl:element name="xf:send" namespace="http://www.w3.org/2002/xforms">
+                            <xsl:attribute name="submission"><xsl:value-of select="concat(@id,'-submit')"/></xsl:attribute>
+                        </xsl:element>
+                    </xsl:element>
+                </xsl:if>
+            </xsl:element>
+        </xsl:template>
 
-    <xsl:template match="option" mode="ui">
-        <xsl:element name="xf:item" namespace="http://www.w3.org/2002/xforms">
-            <xsl:element name="xf:label">
-                <xsl:value-of select="text()"/>
+        <xsl:template match="option" mode="ui">
+            <xsl:element name="xf:item" namespace="http://www.w3.org/2002/xforms">
+                <xsl:element name="xf:label">
+                    <xsl:value-of select="text()"/>
+                </xsl:element>
+                <xsl:element name="xf:value">
+                    <xsl:value-of select="@value"/>
+                </xsl:element>
             </xsl:element>
-            <xsl:element name="xf:value">
-                <xsl:value-of select="@value"/>
-            </xsl:element>
-        </xsl:element>
-    </xsl:template>
+        </xsl:template>
+    -->
 
 </xsl:stylesheet>

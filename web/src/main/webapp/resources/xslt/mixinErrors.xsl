@@ -7,6 +7,7 @@
 <!-- $Id: sort-instance.xsl,v 1.4 2006/03/21 19:24:57 uli Exp $ -->
 <xsl:stylesheet version="2.0"
         xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
         xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
     <xsl:param name="appContext" select="'/betterform'"/>
@@ -21,10 +22,7 @@
         <xsl:text>&#xa;</xsl:text>
     </xsl:variable>
 
-    <xsl:template match="/html">
-        <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html></xsl:text>
-        <xsl:value-of select="$CR"/>
-
+    <xsl:template match="/xhtml:html">
         <xsl:message>errors: <xsl:value-of select="$errors"/></xsl:message>
         <xsl:copy>
             <xsl:apply-templates/>
@@ -32,7 +30,7 @@
     </xsl:template>
 
 
-    <xsl:template match="head">
+    <xsl:template match="xhtml:head">
         <xsl:copy>
             <xsl:apply-templates/>
             <style type="text/css">
