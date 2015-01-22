@@ -12,6 +12,7 @@
 
     <!-- 'data' will be passed in case we deal with a html form submit and second layer validation -->
     <xsl:param name="data" select="'record:foo;trackedDate:bar;created:heute;project:mine;duration:3;'"/>
+    <xsl:param name="submission" select="''"/>
     <!--<xsl:param name="data" select="''"/>-->
 
     <xsl:output method="xhtml" omit-xml-declaration="yes"/>
@@ -68,8 +69,7 @@
         <xsl:variable name="form-id" select="@id"/>
         <xsl:variable name="form" select="."/>
         <xsl:element name="xf:model" namespace="http://www.w3.org/2002/xforms">
-            <xsl:attribute name="id">m-<xsl:value-of select="$form-id"/>
-            </xsl:attribute>
+            <xsl:attribute name="id">m-<xsl:value-of select="$form-id"/></xsl:attribute>
 
             <xsl:element name="xf:instance" namespace="http://www.w3.org/2002/xforms">
                 <xsl:attribute name="id">i-default</xsl:attribute>
@@ -78,45 +78,49 @@
                 </xsl:element>
             </xsl:element>
 
-            <xsl:variable name="this" select="."/>
-            <xsl:for-each select="//*[@list]">
-                <xsl:variable name="instance-id" select="@list"/>
-                <xsl:variable name="options" select="$this//datalist[@id eq $instance-id]"/>
+            <!--
+                        <xsl:variable name="this" select="."/>
+                        <xsl:for-each select="//*[@list]">
+                            <xsl:variable name="instance-id" select="@list"/>
+                            <xsl:variable name="options" select="$this//xhtml:datalist[@id eq $instance-id]"/>
 
-                <xsl:element name="xf:instance" namespace="http://www.w3.org/2002/xforms">
-                    <xsl:attribute name="id">i-<xsl:value-of select="$instance-id"/>
-                    </xsl:attribute>
-                    <xsl:element name="data" namespace="">
-                        <xsl:for-each select="$options/option">
-                            <xsl:element name="option" namespace="">
-                                <xsl:value-of select="@value"/>
+                            <xsl:element name="xf:instance" namespace="http://www.w3.org/2002/xforms">
+                                <xsl:attribute name="id">i-<xsl:value-of select="$instance-id"/>
+                                </xsl:attribute>
+                                <xsl:element name="data" namespace="">
+                                    <xsl:for-each select="$options/xhtml:option">
+                                        <xsl:element name="option" namespace="">
+                                            <xsl:value-of select="@value"/>
+                                        </xsl:element>
+                                    </xsl:for-each>
+                                </xsl:element>
                             </xsl:element>
                         </xsl:for-each>
-                    </xsl:element>
-                </xsl:element>
-            </xsl:for-each>
 
-            <xsl:for-each select="//select[option]">
-                <xsl:variable name="instance-id" select="@name"/>
+                        <xsl:for-each select="//xhtml:select[xhtml:option]">
+                            <xsl:variable name="instance-id" select="@name"/>
 
-                <xsl:element name="xf:instance" namespace="http://www.w3.org/2002/xforms">
-                    <xsl:attribute name="id">i-<xsl:value-of select="$instance-id"/>
-                    </xsl:attribute>
-                    <xsl:element name="data" namespace="">
-                        <xsl:for-each select="option">
-                            <xsl:element name="option" namespace="">
-                                <xsl:value-of select="@value"/>
+                            <xsl:element name="xf:instance" namespace="http://www.w3.org/2002/xforms">
+                                <xsl:attribute name="id">i-<xsl:value-of select="$instance-id"/>
+                                </xsl:attribute>
+                                <xsl:element name="data" namespace="">
+                                    <xsl:for-each select="option">
+                                        <xsl:element name="option" namespace="">
+                                            <xsl:value-of select="@value"/>
+                                        </xsl:element>
+                                    </xsl:for-each>
+                                </xsl:element>
                             </xsl:element>
                         </xsl:for-each>
-                    </xsl:element>
-                </xsl:element>
-            </xsl:for-each>
+            -->
 
             <xsl:apply-templates select="*" mode="bind"/>
 
             <xsl:element name="xf:submission" namespace="http://www.w3.org/2002/xforms">
                 <!--<xsl:attribute name="id">s-<xsl:value-of select="@id"/>-default</xsl:attribute>-->
                 <xsl:attribute name="id">s-default</xsl:attribute>
+                <!-- must always be replace="all" to return the response of the target script (action attribute) -->
+                <xsl:attribute name="replace">all</xsl:attribute>
                 <xsl:attribute name="resource">
                     <xsl:value-of select="@action"/>
                 </xsl:attribute>
@@ -155,7 +159,7 @@
         </xsl:element>
     </xsl:template>
 
-    <xsl:template match="text()" mode="model" priority="10"/>
+    <xsl:template match="text()" mode="model" priority="20"/>
     <xsl:template match="label" mode="model" priority="10"/>
     <xsl:template match="option" mode="model" priority="10"/>
 
@@ -191,7 +195,7 @@
     ###############################################################################################
     -->
 
-    <xsl:template match="text()" mode="bind" priority="10"/>
+    <xsl:template match="text()" mode="bind" priority="20"/>
     <xsl:template match="label" mode="bind" priority="10"/>
     <xsl:template match="option" mode="bind" priority="10"/>
 

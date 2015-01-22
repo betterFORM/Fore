@@ -63,17 +63,17 @@ public class ExistModelGenerator {
      * @throws javax.xml.parsers.ParserConfigurationException
      * @throws org.xml.sax.SAXException
      */
-    public Node generateModel(String referredDocument,
-                              CachingTransformerService cachingTransformerService,
-                              String data,
-                              String reqUri)
+    public Node fetchModel(String referredDocument,
+                           CachingTransformerService cachingTransformerService,
+                           String data,
+                           String reqUri)
             throws PermissionDeniedException, IOException, EXistException, TransformerException, XFormsConfigException, LockException, SAXException, URISyntaxException {
         this.transformerService = cachingTransformerService;
 
         // ???????????????????????? resolve and get file from exist ??????????????????????????
         this.referer = referredDocument;
         org.w3c.dom.Document formDoc = broker.getDocument(this.referer);
-
+        DOMUtil.prettyPrintDOM(formDoc);
         LOG.debug("Data: " + data);
 
         String foreModelPath = referredDocument.substring(0,referredDocument.indexOf(".")) + ".xml";

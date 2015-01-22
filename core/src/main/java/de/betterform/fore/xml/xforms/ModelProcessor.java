@@ -10,6 +10,7 @@ import de.betterform.fore.xml.events.XFormsEventNames;
 import de.betterform.fore.xml.events.XMLEvent;
 import de.betterform.fore.xml.xforms.exception.XFormsBindingException;
 import de.betterform.fore.xml.xforms.exception.XFormsException;
+import de.betterform.fore.xml.xforms.exception.XFormsInternalSubmitException;
 import de.betterform.fore.xml.xforms.model.ModelItem;
 import de.betterform.fore.xml.xforms.model.submission.Submission;
 import org.apache.commons.logging.Log;
@@ -37,6 +38,7 @@ public class ModelProcessor extends AbstractProcessorDecorator {
     private List<XMLEvent> events;
     private Object responseStream=null;
     private Submission defaultSubmission;
+    private Exception exception;
 
     public ModelProcessor() {
         super();
@@ -106,6 +108,12 @@ public class ModelProcessor extends AbstractProcessorDecorator {
                 }else if(XFormsEventNames.SUBMIT_ERROR.equalsIgnoreCase(type)){
                     //todo : this must be propagated up -> changed into error to display to the user if the backend script fails
                     LOG.debug("XForms submit error");
+                    isSuccess=false;
+                    this.exception = new XFormsException((String) xmlEvent.getContextInfo("response-reason-phrase"));
+//                    ErrorInfo errorInfo = new ErrorInfo();
+//                    errorInfo.setAlert((String) xmlEvent.getContextInfo("response-reason-phrase"));
+//                    errorInfo.setErrorType(XFormsConstants.RESOURCE_ERROR);
+//                    this.errors.add(errorInfo);
                 }else if(XFormsEventNames.SUBMIT_DONE.equalsIgnoreCase(type)){
                     LOG.debug("XForms submit done");
                     this.responseStream = xmlEvent.getContextInfo(XFormsProcessor.SUBMISSION_RESPONSE_STREAM);
@@ -113,8 +121,13 @@ public class ModelProcessor extends AbstractProcessorDecorator {
                 this.events.add(xmlEvent);
             }
         } catch (Exception e) {
+            this.exception = e;
             handleEventException(e);
         }
+    }
+
+    public Exception getException(){
+        return this.exception;
     }
 
     /*
@@ -153,7 +166,7 @@ public class ModelProcessor extends AbstractProcessorDecorator {
      * submits the HTML form via XForms
      * @throws XFormsException
      */
-    public InputStream submit() {
+    public InputStream submit() throws XFormsException {
         // todo:  hard-coded id for now
         String id = "s-default";
 
@@ -171,11 +184,7 @@ public class ModelProcessor extends AbstractProcessorDecorator {
         this.defaultSubmission = (Submission) submissionObject;
 
         // dispatch xforms-submit to submission
-        try {
-            container.dispatch(((Submission) submissionObject).getTarget(), XFormsEventNames.SUBMIT, null);
-        } catch (XFormsException e) {
-            e.printStackTrace();
-        }
+        container.dispatch(((Submission) submissionObject).getTarget(), XFormsEventNames.SUBMIT, null);
         return (InputStream) this.responseStream;
     }
 
@@ -186,7 +195,7 @@ public class ModelProcessor extends AbstractProcessorDecorator {
      * @throws XFormsException
      */
     public boolean isSuccess() throws XFormsException {
-        return this.errors.getErrorInfo().size()==0;
+        return this.errors.getErrorInfo().size()==0 && isSuccess;
     }
 
     @JacksonXmlRootElement(localName = "errors")

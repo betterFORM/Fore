@@ -181,7 +181,7 @@ public class XFormsFilter implements Filter {
             ExistModelGenerator generator = new ExistModelGenerator(broker);
             String referredDocument = request.getHeader("Referer");
             try {
-                node = generator.generateModel(referredDocument,
+                node = generator.fetchModel(referredDocument,
                         (CachingTransformerService) this.filterConfig.getServletContext().getAttribute(TransformerService.TRANSFORMER_SERVICE),
                         getRequestParamsAsStringEncoded(request),
                         request.getRequestURI());
@@ -235,6 +235,15 @@ public class XFormsFilter implements Filter {
                 } else {
                     //todo: return error information
                     List errors = mp.getErrors();
+                    if(errors.size()==0){
+                        /*
+                        submit was unsuccessful but no validation errors are there. This means that the submission
+                        itself has failed.
+                        */
+                        returnErrorPage(request,response,session,mp.getException());
+                        return;//questionable to do that here!!
+                    }
+
                     Document errs = null;
                     try {
                         errs = mp.serializeAsDOM();
@@ -253,11 +262,6 @@ public class XFormsFilter implements Filter {
 
 //                    response.setContentLength(out.toByteArray().length);
 //                    response.getOutputStream().write(out.toByteArray());
-
-
-                    // may work one day but browser url still changes and resubmit will still cause error in modelgenerator.
-//                        request.getRequestDispatcher("forms/fore/html-plain-novalidate.html").include(request, response);
-//                        sendError(request, response, session);
                 }
             } catch (XFormsException e) {
                 sendError(request, response, session);
@@ -269,6 +273,11 @@ public class XFormsFilter implements Filter {
                 e.printStackTrace();
             }
         }else if ("GET".equalsIgnoreCase(request.getMethod()) && session.getAttribute("errors")!=null){
+            /*
+            This piece of code represents the 'G' part of the PRG (post, request, get) pattern. If an error occurred
+            during validation the error response (original form with error messages is redirected and delivered
+            by the line below.
+             */
             //there was an error response which is now requested
             ByteArrayOutputStream out = (ByteArrayOutputStream) session.getAttribute("errors");
             session.removeAttribute("errors");
