@@ -173,7 +173,7 @@ public class WebFactory {
         transformerService.addResourceResolver(new ClasspathResourceResolver(realPath));
         transformerService.addResourceResolver(new HttpResourceResolver());
 
-        String xsltPath = WebProcessor.RESOURCE_DIR + "xslt/";
+        String xsltPath = WebProcessor.XSLT_DIR;
         String xsltDefault = Config.getInstance().getProperty("ui-transform");
         String html2xforms = Config.getInstance().getProperty("preprocessor-transform");
         String updateTransform = Config.getInstance().getProperty("update-transform");
@@ -231,10 +231,17 @@ public class WebFactory {
         return generator;
     }
 
+/*
     public URI getXsltURI(String xsltPath, String xsltDefault) throws URISyntaxException, XFormsConfigException {
         String resolvePath = getRealPath(xsltPath + xsltDefault, servletContext);
-        String pathToXSLDirectory = resolvePath.substring(0, resolvePath.lastIndexOf(File.separator));
+        String pathToXSLDirectory = resolvePath.substring(0, resolvePath.lastIndexOf(File.separator)+1);
         return new File(pathToXSLDirectory).toURI().resolve(new URI(xsltDefault));
+    }
+*/
+
+    public URI getXsltURI(String xsltPath, String xsltDefault) throws URISyntaxException, XFormsConfigException {
+        String resolvePath = getRealPath(xsltPath + xsltDefault, servletContext);
+        return new File(resolvePath).toURI();
     }
 
 

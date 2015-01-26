@@ -15,7 +15,7 @@
     <xsl:param name="submission" select="''"/>
     <!--<xsl:param name="data" select="''"/>-->
 
-    <xsl:output method="xhtml" omit-xml-declaration="yes"/>
+    <xsl:output method="xhtml" omit-xml-declaration="yes" />
     <!--
     Transforms sanitized HTML5 documents into into xforms elements.
     -->
@@ -122,7 +122,7 @@
                 <!-- must always be replace="all" to return the response of the target script (action attribute) -->
                 <xsl:attribute name="replace">all</xsl:attribute>
                 <xsl:attribute name="resource">
-                    <xsl:value-of select="concat($submission,@action)"/>
+                    <xsl:value-of select="$submission"/>
                     <!--<xsl:value-of select="@action"/>-->
                 </xsl:attribute>
                 <xsl:attribute name="method">

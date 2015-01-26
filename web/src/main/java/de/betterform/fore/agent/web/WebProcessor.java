@@ -82,6 +82,7 @@ public class WebProcessor extends AbstractProcessorDecorator {
      * Hardcoded as resources are considered betterFORM-internal and their loading should not be touched by users.
      */
     public static final String RESOURCE_DIR = "WEB-INF/classes/META-INF/resources/";
+    public static final String XSLT_DIR = RESOURCE_DIR + "xslt/";
 
     public static final String ALTERNATIVE_ROOT = "ResourcePath";
 

@@ -19,6 +19,7 @@ import org.exist.security.internal.web.HttpAccount;
 import org.exist.storage.BrokerPool;
 import org.exist.storage.DBBroker;
 import org.exist.storage.lock.Lock;
+import org.exist.storage.serializers.Serializer;
 import org.exist.storage.txn.TransactionManager;
 import org.exist.storage.txn.Txn;
 import org.exist.util.LockException;
@@ -31,6 +32,7 @@ import org.xml.sax.SAXException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -54,6 +56,11 @@ public class ExistBroker {
     private BrokerPool pool;
     private Subject defaultUser;
     private BasicAuthenticator authenticator;
+
+
+
+    protected static String driver = "org.exist.xmldb.DatabaseImpl";
+    protected static String URI = "xmldb:exist://localhost:8080/exist/xmlrpc";
 
 
     public ExistBroker(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
@@ -81,6 +88,35 @@ public class ExistBroker {
      * @throws EXistException
      * @throws PermissionDeniedException
      */
+
+    Document getDocument(String path) throws IOException, EXistException, PermissionDeniedException, SAXException, ParserConfigurationException {
+        DocumentImpl resource = null;
+
+        DBBroker dbbroker = getDBBroker();
+        final XmldbURI pathUri = getXmldbURI(path);
+        if(LOG.isDebugEnabled()){
+            LOG.debug("ExistBroker getDocument: " + pathUri.getCollectionPath());
+        }
+
+        resource = dbbroker.getXMLResource(pathUri, Lock.READ_LOCK);
+        if(resource == null || "".equals(resource)){
+            if(LOG.isDebugEnabled()){
+                LOG.debug("ExistBroker getDocument: " + pathUri.getCollectionPath()  + " not found.");
+            }
+            return null;
+        }else {
+            Serializer serializer = dbbroker.getSerializer();
+            serializer.reset();
+            String result = serializer.serialize(resource);
+
+            if (resource != null) {
+                resource.getUpdateLock().release(Lock.READ_LOCK);
+            }
+            return DOMUtil.parseString(result, true, false);
+        }
+    }
+
+/*
     Document getDocument(String path) throws IOException, EXistException, PermissionDeniedException {
         DocumentImpl resource = null;
 
@@ -91,13 +127,13 @@ public class ExistBroker {
 
         if(LOG.isDebugEnabled()){
             LOG.debug("ExistBroker getDocument: " + path);
-            DOMUtil.prettyPrintDOM(resource);
         }
         if(resource!=null) {
             resource.getUpdateLock().release(Lock.READ_LOCK);
         }
         return resource;
     }
+*/
 
     private XmldbURI getXmldbURI(String path) throws UnsupportedEncodingException {
         String xmldbPath = path.substring( path.indexOf("/exist")+6 ,path.length() );

@@ -181,11 +181,14 @@ public class XFormsFilter implements Filter {
             ExistModelGenerator generator = new ExistModelGenerator(broker);
             String referredDocument = request.getHeader("Referer");
             try {
+                String html2xforms = Config.getInstance().getProperty("preprocessor-transform");
+                String realPath = webFactory.getRealPath("resources/xslt/html2xforms.xsl", session.getServletContext());
+                generator.setStylesheetPath( new File(realPath).toURI());
                 node = generator.fetchModel(referredDocument,
                         (CachingTransformerService) this.filterConfig.getServletContext().getAttribute(TransformerService.TRANSFORMER_SERVICE),
                         getRequestParamsAsStringEncoded(request),
                         request.getRequestURI());
-                DOMUtil.prettyPrintDOM(node);
+//                DOMUtil.prettyPrintDOM(node);
             } catch (TransformerException e) {
                 returnErrorPage(request, response, session, e);
             } catch (XFormsConfigException e) {
@@ -199,6 +202,8 @@ public class XFormsFilter implements Filter {
             } catch (SAXException e) {
                 returnErrorPage(request, response, session, e);
             } catch (URISyntaxException e) {
+                returnErrorPage(request, response, session, e);
+            } catch (ParserConfigurationException e) {
                 returnErrorPage(request, response, session, e);
             }
 
@@ -266,11 +271,15 @@ public class XFormsFilter implements Filter {
             } catch (XFormsException e) {
                 sendError(request, response, session);
             } catch (TransformerException e) {
-                e.printStackTrace();
+                sendError(request, response, session);
             } catch (PermissionDeniedException e) {
-                e.printStackTrace();
+                sendError(request, response, session);
             } catch (EXistException e) {
-                e.printStackTrace();
+                sendError(request, response, session);
+            } catch (ParserConfigurationException e) {
+                sendError(request, response, session);
+            } catch (SAXException e) {
+                sendError(request, response, session);
             }
         }else if ("GET".equalsIgnoreCase(request.getMethod()) && session.getAttribute("errors")!=null){
             /*
