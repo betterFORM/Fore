@@ -81,9 +81,6 @@ public class ExistModelGenerator {
 
         DOMUtil.prettyPrintDOM(formDoc);
         LOG.debug("Data: " + data);
-//        org.w3c.dom.Document newDoc = DOMUtil.newDocument(true,false);
-//        DOMUtil.importNode(newDoc,formDoc);
-//        DOMUtil.prettyPrintDOM(newDoc);
 
         String foreModelPath = referredDocument.substring(0,referredDocument.indexOf(".")) + ".xml";
         org.w3c.dom.Document foreModel = broker.getDocument(foreModelPath);
@@ -180,45 +177,14 @@ public class ExistModelGenerator {
 
     private DOMResult generateModel(String reqUri, String data, org.w3c.dom.Document domDoc) throws XFormsConfigException, TransformerException {
         //generate XForms Model for incoming HTML via XSLT
-/*
         String styles = Config.getInstance().getProperty("preprocessor-transform");
         Transformer transformer = this.transformerService.getTransformerByName(styles);
         transformer.setParameter("data", data);
         transformer.setParameter("submission", reqUri);
         DOMSource source = new DOMSource(domDoc);
         DOMResult domResult = new DOMResult();
-
         transformer.transform(source, domResult);
         return domResult;
-*/
-
-
-//        String styles = Config.getInstance().getProperty("preprocessor-transform");
-//        File stylesheetFile = new File(this.stylesheetPath);
-//        if(! stylesheetFile.exists()){
-//            throw new XFormsConfigException("stylesheet not found: " + stylesheetPath);
-//        }
-//        Transformer transformer = TransformerFactory.newInstance().newTransformer(new javax.xml.transform.stream.StreamSource(stylesheetFile));
-
-
-        File stylesheetFile = new File (this.stylesheetPath);
-        if(! stylesheetFile.exists()){
-            throw new XFormsConfigException("stylesheet not found: " + stylesheetPath);
-        }
-
-        Transformer transformer = TransformerFactory.newInstance().newTransformer(new javax.xml.transform.stream.StreamSource(stylesheetFile));
-        transformer.setParameter("data", data);
-        transformer.setParameter("submission", reqUri);
-
-
-//        String styles = Config.getInstance().getProperty("preprocessor-transform");
-
-//        Transformer transformer = this.transformerService.getTransformerByName(styles);
-
-        DOMSource in = new DOMSource(domDoc);
-        DOMResult result = new DOMResult();
-        transformer.transform( in ,result);
-        return result;
     }
 
 

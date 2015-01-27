@@ -1280,6 +1280,10 @@ public class Submission extends BindingElement implements DefaultAction {
             if(XFormsProcessor.SUBMISSION_RESPONSE_STREAM.equals(entry.getKey())){
                 result.put(XFormsProcessor.SUBMISSION_RESPONSE_STREAM,entry.getValue());
             }
+            if(XFormsProcessor.SUBMISSION_RESPONSE_DOCUMENT.equals(entry.getKey())){
+                result.put(XFormsProcessor.SUBMISSION_RESPONSE_DOCUMENT,entry.getValue());
+            }
+
 		}
 		result.put(RESOURCE_URI, getResourceURI());
         result.put(RESPONSE_STATUS_CODE, (response.containsKey(RESPONSE_STATUS_CODE) ? Double.parseDouble((String)response.get(RESPONSE_STATUS_CODE)) : Double.valueOf(200d))); //TODO get real response code

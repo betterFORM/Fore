@@ -54,7 +54,6 @@ public interface XFormsProcessor {
      * agent works for now, but is not completely right, since the user agent
      * stays connected to betterForm instead of the submission target. Maybe a smart
      * redirect/proxy combination could help to achieve this.
-     * @deprecated move back to de.betterform.xml.xforms.core.Submission
      */
     static final String  SUBMISSION_RESPONSE_STREAM = "betterform.submission.response.stream";
 

@@ -104,16 +104,15 @@ public class ExistBroker {
                 LOG.debug("ExistBroker getDocument: " + pathUri.getCollectionPath()  + " not found.");
             }
             return null;
-        }else {
-            Serializer serializer = dbbroker.getSerializer();
-            serializer.reset();
-            String result = serializer.serialize(resource);
-
-            if (resource != null) {
-                resource.getUpdateLock().release(Lock.READ_LOCK);
-            }
-            return DOMUtil.parseString(result, true, false);
         }
+        Serializer serializer = dbbroker.getSerializer();
+        serializer.reset();
+        String result = serializer.serialize(resource);
+
+        if (resource != null) {
+            resource.getUpdateLock().release(Lock.READ_LOCK);
+        }
+        return DOMUtil.parseString(result, true, false);
     }
 
 /*
@@ -159,6 +158,7 @@ public class ExistBroker {
         collection.store(tx, getDBBroker(), info, contents, false);
 
         transactionManager.commit(tx);
+
     }
 
     DBBroker getDBBroker() throws IOException, EXistException {

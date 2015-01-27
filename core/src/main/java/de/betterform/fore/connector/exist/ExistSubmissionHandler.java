@@ -5,7 +5,7 @@
 
 package de.betterform.fore.connector.exist;
 
-import java.io.ByteArrayOutputStream;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
@@ -104,6 +104,10 @@ public class ExistSubmissionHandler extends AbstractConnector implements Submiss
     
     Map<String, Object> result = new HashMap<String, Object>();
     result.put(XFormsProcessor.SUBMISSION_RESPONSE_DOCUMENT, DOMUtil.parseString(resultString, true, true));
+
+    InputStream submitResultStream = new ByteArrayInputStream(resultString.getBytes("UTF-8"));
+    result.put(XFormsProcessor.SUBMISSION_RESPONSE_STREAM, submitResultStream);
+
     return result;
     
   }

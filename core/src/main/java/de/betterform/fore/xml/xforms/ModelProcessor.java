@@ -36,7 +36,7 @@ public class ModelProcessor extends AbstractProcessorDecorator {
 
     private boolean isSuccess=true;
     private List<XMLEvent> events;
-    private Object responseStream=null;
+    private InputStream responseStream=null;
     private Submission defaultSubmission;
     private Exception exception;
 
@@ -110,13 +110,10 @@ public class ModelProcessor extends AbstractProcessorDecorator {
                     LOG.debug("XForms submit error");
                     isSuccess=false;
                     this.exception = new XFormsException((String) xmlEvent.getContextInfo("response-reason-phrase"));
-//                    ErrorInfo errorInfo = new ErrorInfo();
-//                    errorInfo.setAlert((String) xmlEvent.getContextInfo("response-reason-phrase"));
-//                    errorInfo.setErrorType(XFormsConstants.RESOURCE_ERROR);
-//                    this.errors.add(errorInfo);
                 }else if(XFormsEventNames.SUBMIT_DONE.equalsIgnoreCase(type)){
                     LOG.debug("XForms submit done");
-                    this.responseStream = xmlEvent.getContextInfo(XFormsProcessor.SUBMISSION_RESPONSE_STREAM);
+                    this.responseStream = (InputStream) xmlEvent.getContextInfo(XFormsProcessor.SUBMISSION_RESPONSE_STREAM);
+
                 }
                 this.events.add(xmlEvent);
             }
@@ -185,7 +182,7 @@ public class ModelProcessor extends AbstractProcessorDecorator {
 
         // dispatch xforms-submit to submission
         container.dispatch(((Submission) submissionObject).getTarget(), XFormsEventNames.SUBMIT, null);
-        return (InputStream) this.responseStream;
+        return this.responseStream;
     }
 
     /**

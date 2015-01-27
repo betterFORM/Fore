@@ -227,6 +227,7 @@ public class XFormsFilter implements Filter {
                         LOG.debug("Submission encoding: " + submission.getEncoding());
                     }
 
+                    response.setCharacterEncoding("UTF-8");
                     OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());
                     for (int b = resultStream.read(); b > -1; b = resultStream.read()) {
                         outputStream.write(b);
