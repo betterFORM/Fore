@@ -113,7 +113,6 @@ public class ModelProcessor extends AbstractProcessorDecorator {
                 }else if(XFormsEventNames.SUBMIT_DONE.equalsIgnoreCase(type)){
                     LOG.debug("XForms submit done");
                     this.responseStream = (InputStream) xmlEvent.getContextInfo(XFormsProcessor.SUBMISSION_RESPONSE_STREAM);
-
                 }
                 this.events.add(xmlEvent);
             }

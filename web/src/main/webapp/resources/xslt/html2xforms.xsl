@@ -121,14 +121,14 @@
                 <xsl:attribute name="id">s-default</xsl:attribute>
                 <!-- must always be replace="all" to return the response of the target script (action attribute) -->
                 <xsl:attribute name="replace">all</xsl:attribute>
-                <xsl:attribute name="resource">
-                    <xsl:value-of select="$submission"/>
-                    <!--<xsl:value-of select="@action"/>-->
-                </xsl:attribute>
+                <xsl:attribute name="resource"><xsl:value-of select="concat('exist:/',$submission)"/></xsl:attribute>
+                <xsl:attribute name="method">execute</xsl:attribute>
+<!--
                 <xsl:attribute name="method">
                     <xsl:variable name="method" select="if(exists($form/@method)) then @method else 'GET'"/>
                     <xsl:value-of select="$method"/>
                 </xsl:attribute>
+-->
                 <xsl:attribute name="validate">true</xsl:attribute>
             </xsl:element>
         </xsl:element>

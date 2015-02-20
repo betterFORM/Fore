@@ -24,6 +24,7 @@ import de.betterform.fore.xml.xforms.exception.XFormsException;
 import de.betterform.fore.xml.xforms.model.submission.Submission;
 import de.betterform.fore.xml.xslt.TransformerService;
 import de.betterform.fore.xml.xslt.impl.CachingTransformerService;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.exist.EXistException;
@@ -219,23 +220,20 @@ public class XFormsFilter implements Filter {
 
                     Submission submission = mp.getDefaultSubmission();
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("Submission contenttype: " + submission.getSerialization());
                         LOG.debug("Submission replace: " + submission.getReplace());
                         LOG.debug("Submission mediatype: " + submission.getMediatype());
                         LOG.debug("Submission resource: " + submission.getResource());
                         LOG.debug("Submission method: " + submission.getMethod());
                         LOG.debug("Submission encoding: " + submission.getEncoding());
                     }
-
+                    //force correct contenttype
+                    String contentType = submission.getMediatype() + "; charset=" + submission.getEncoding();
+                    response.setContentType(contentType);
                     response.setCharacterEncoding("UTF-8");
-                    OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());
-                    for (int b = resultStream.read(); b > -1; b = resultStream.read()) {
-                        outputStream.write(b);
-                    }
+                    IOUtils.copy(resultStream, response.getWriter(),"UTF-8");
 
                     // close streams
                     resultStream.close();
-                    outputStream.close();
                     // exit Filter without calling filterchain as response has already been handled by ModelProcessor
                     return;
                 } else {
@@ -291,6 +289,7 @@ public class XFormsFilter implements Filter {
             //there was an error response which is now requested
             ByteArrayOutputStream out = (ByteArrayOutputStream) session.getAttribute("errors");
             session.removeAttribute("errors");
+            response.setCharacterEncoding("UTF-8");
             response.setContentLength(out.toByteArray().length);
             response.getOutputStream().write(out.toByteArray());
         } else {
