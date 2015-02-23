@@ -29,5 +29,15 @@ All packages starting with 'de.betterform' have been renamed to 'de.betterform.f
 ModelValidator in eXistdb requires the use of xhtml-conform HTML documents at the moment. ModelValidator itself can
 handle HTML5 but there are still some restrictions using that with out-of-the-box with eXistdb.
 
+## Current Limitations
+
+ModelValidator finds form fields by their name. That means that validation errors are associated with their respective fields (nodes) by matching the 'name' attribute of the control. Therefore 'name' attributes must be unique in a form - otherwise display of errors will likely fail. This also means for the moment that repeatable sections are not possible. In a later release matching is planned to use indexes to uniquely identify fields.
+
+Currently only supports forms using the 'POST' method.
+
+If an input is of type 'number' non-numerical values won't be submitted even if novalidate is set. This means that
+those values cannot be redisplayed in case of an error - the user needs to refill the value. This is surely a limitation
+in terms of usability. A JavaScript version would not suffer this problem.
+
 
 

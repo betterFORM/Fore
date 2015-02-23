@@ -78,21 +78,24 @@ public class ModelProcessor extends AbstractProcessorDecorator {
                     while(iterator.hasNext()){
                         boolean invalid=false;
                         ModelItem modelItem = (ModelItem) iterator.next();
+                        String value = modelItem.getValue();
 
                         if(!modelItem.getLocalUpdateView().isDatatypeValid()){
                             ErrorInfo errorInfo = new ErrorInfo();
                             errorInfo.setErrorType(ErrorInfo.DATATYPE_INVALID);
                             String datatype = modelItem.getDeclarationView().getDatatype();
                             errorInfo.setDataType(datatype);
-                            errorInfo.setRef(((Node)modelItem.getNode()).getLocalName());
+                            errorInfo.setRef(((Node) modelItem.getNode()).getLocalName());
                             errorInfo.setPath(modelItem.toString());
+                            errorInfo.setValue(value);
                             this.errors.add(errorInfo);
                         }
                         if(modelItem.getRefreshView().isInvalidMarked()){
                             ErrorInfo errorInfo = new ErrorInfo();
                             errorInfo.setErrorType(ErrorInfo.CONSTRAINT_INVALID);
-                            errorInfo.setRef(((Node)modelItem.getNode()).getLocalName());
+                            errorInfo.setRef(((Node) modelItem.getNode()).getLocalName());
                             errorInfo.setPath(modelItem.toString());
+                            errorInfo.setValue(value);
                             this.errors.add(errorInfo);
                         }
                         if(modelItem.getRefreshView().isRequiredMarked()){
@@ -101,6 +104,7 @@ public class ModelProcessor extends AbstractProcessorDecorator {
                                 errorInfo.setErrorType(ErrorInfo.REQUIRED_INVALID);
                                 errorInfo.setRef(((Node)modelItem.getNode()).getLocalName());
                                 errorInfo.setPath(modelItem.toString());
+                                errorInfo.setValue(value);
                                 this.errors.add(errorInfo);
                             }
                         }
@@ -217,6 +221,7 @@ public class ModelProcessor extends AbstractProcessorDecorator {
         private String errorType;
         private String path;
         private String alert;
+        private String value;
 
         ErrorInfo(){
         }
@@ -260,5 +265,9 @@ public class ModelProcessor extends AbstractProcessorDecorator {
         public void setAlert(String alert) {
             this.alert = alert;
         }
+
+        public String getValue(){ return value;}
+
+        public void setValue(String value){ this.value = value; }
     }
 }

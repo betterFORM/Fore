@@ -181,13 +181,14 @@ public class XFormsFilter implements Filter {
             }
             ExistModelGenerator generator = new ExistModelGenerator(broker);
             String referredDocument = request.getHeader("Referer");
+            String data = getRequestParamsAsStringEncoded(request);
             try {
                 String html2xforms = Config.getInstance().getProperty("preprocessor-transform");
                 String realPath = webFactory.getRealPath("resources/xslt/html2xforms.xsl", session.getServletContext());
                 generator.setStylesheetPath( new File(realPath).toURI());
                 node = generator.fetchModel(referredDocument,
                         (CachingTransformerService) this.filterConfig.getServletContext().getAttribute(TransformerService.TRANSFORMER_SERVICE),
-                        getRequestParamsAsStringEncoded(request),
+                        data,
                         request.getRequestURI());
 //                DOMUtil.prettyPrintDOM(node);
             } catch (TransformerException e) {
@@ -258,7 +259,7 @@ public class XFormsFilter implements Filter {
                     }
                     DOMUtil.prettyPrintDOM(errs);
                     // mix errors back into original html document
-                    ByteArrayOutputStream out = generator.mixinXMLErrors(errs);
+                    ByteArrayOutputStream out = generator.mixinXMLErrors(errs,data);
 
                     //store form output with errors in session
                     session.setAttribute("errors",out);

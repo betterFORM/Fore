@@ -6,6 +6,7 @@
 
 <!-- $Id: sort-instance.xsl,v 1.4 2006/03/21 19:24:57 uli Exp $ -->
 <xsl:stylesheet version="2.0"
+        xmlns="http://www.w3.org/1999/xhtml"
         xmlns:xhtml="http://www.w3.org/1999/xhtml"
         xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
@@ -13,7 +14,8 @@
     <xsl:output method="xhtml" encoding="UTF-8" indent="yes"/>
 
 
-    <xsl:param name="errors" />
+    <xsl:variable name="errors" select="document('errors.xml')"/>
+    <xsl:param name="data" select="'lastname:Doe;zip:abc;'"/>
 
     <xsl:output method="xhtml" omit-xml-declaration="yes"/>
     <xsl:strip-space elements="*"/>
@@ -22,9 +24,6 @@
     </xsl:variable>
 
     <xsl:template match="/xhtml:html">
-        <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html></xsl:text>
-        <xsl:value-of select="$CR"/>
-
         <xsl:message>errors: <xsl:value-of select="$errors"/></xsl:message>
         <xsl:copy>
             <xsl:apply-templates/>
@@ -32,26 +31,27 @@
     </xsl:template>
 
 
-    <xsl:template match="head">
+    <xsl:template match="xhtml:head">
         <xsl:copy>
             <xsl:apply-templates/>
             <style type="text/css">
-                input.required-failed ~ span.fore-required:after{
-                content:attr(title);
-                color:red;
+                .required-failed ~ .fore-required:after{
+                    content:attr(title);
+                    color:blue;
                 }
-                input.constraint-failed ~ span.fore-constraint:after{
-                content:attr(title);
-                color:red;
+                .constraint-failed ~ .fore-constraint:after{
+                    content:attr(title);
+                    color:orange;
                 }
-                input.type-failed ~ span.fore-type:after{
-                content:attr(title);
-                color:red;
+                .datatype-failed ~ .fore-type:after{
+                    content:attr(title);
+                    color:darkred;
                 }
             </style>
         </xsl:copy>
     </xsl:template>
 
+    <!-- todo: copy old values from form into fields -->
     <xsl:template match="*[@name]">
 
 
@@ -68,11 +68,14 @@
             </xsl:for-each>
         </xsl:variable>
 
-        <xsl:message>classes:'<xsl:value-of select="$classes"/>'</xsl:message>
+        <!--<xsl:message>classes:'<xsl:value-of select="$classes"/>'</xsl:message>-->
+        <xsl:message>value:'<xsl:value-of select="$errors[1]//errorInfo[ref = $currName]/value"/>'</xsl:message>
 
+        <xsl:variable name="attrs" select="@*"/>
         <xsl:copy>
-            <xsl:copy-of select="@*[not(name()='class')]"/>
-            <xsl:attribute name="class" select="$classes"/>
+                <xsl:copy-of select="@*[not(name()='class') and not(name()='value')]"/>
+                <xsl:attribute name="class" select="$classes"/>
+                <xsl:attribute name="value" select="$errors[1]//errorInfo[ref = $currName]/value"/>
             <xsl:apply-templates/>
         </xsl:copy>
     </xsl:template>

@@ -116,6 +116,7 @@ public class ExistModelGenerator {
      * @throws de.betterform.fore.xml.config.XFormsConfigException
      * @throws javax.xml.transform.TransformerException
      * @throws java.io.IOException
+     * @deprecated
      */
     public ByteArrayOutputStream mixinErrors(String errorXML) throws XFormsConfigException, TransformerException, IOException, EXistException, PermissionDeniedException, ParserConfigurationException, SAXException {
         String styles = Config.getInstance().getProperty("error-transform");
@@ -134,13 +135,25 @@ public class ExistModelGenerator {
         return outputStream;
     }
 
-    public ByteArrayOutputStream mixinXMLErrors(org.w3c.dom.Document errors) throws XFormsConfigException, TransformerException, IOException, EXistException, PermissionDeniedException, ParserConfigurationException, SAXException {
+    /**
+     * takes errorinfo XML as string, transform it and return the full HTML file with error-information as a stream.
+     * Errors will be output as a set of CSS classes on the respective control.
+     *
+     * @param errors the error information (serialized from ErrorInfo objects) as a XML string
+     * @param data the request params encoded in a string
+     * @return complete HTML document with error information as CSS classes
+     * @throws de.betterform.fore.xml.config.XFormsConfigException
+     * @throws javax.xml.transform.TransformerException
+     * @throws java.io.IOException
+     */
+    public ByteArrayOutputStream mixinXMLErrors(org.w3c.dom.Document errors,String data) throws XFormsConfigException, TransformerException, IOException, EXistException, PermissionDeniedException, ParserConfigurationException, SAXException {
         String styles = Config.getInstance().getProperty("error-transform");
         Transformer transformer = this.transformerService.getTransformerByName(styles);
         org.w3c.dom.Document htmlDoc = broker.getDocument(this.referer);
         DOMUtil.prettyPrintDOM(htmlDoc);
 
         transformer.setParameter("errors", new DOMSource(errors.getDocumentElement()));
+        transformer.setParameter("data", data);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
 

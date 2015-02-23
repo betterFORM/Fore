@@ -1,16 +1,50 @@
 <errors>
     <errorInfo>
-        <ref>myname</ref>
-        <errorType>constraint-failed</errorType>
-        <path>/data[1]/myname[1]</path>
+        <ref>lastname</ref>
+        <errorType>required-failed</errorType>
+        <path>/data[1]/lastname[1]</path>
         <alert/>
-        <datatype></datatype>
+        <value/>
+        <datatype/>
     </errorInfo>
     <errorInfo>
-        <ref>myname</ref>
+        <ref>street</ref>
         <errorType>required-failed</errorType>
-        <path>/data[1]/myname[1]</path>
+        <path>/data[1]/street[1]</path>
         <alert/>
-        <datatype></datatype>
+        <value/>
+        <datatype/>
+    </errorInfo>
+    <errorInfo>
+        <ref>zip</ref>
+        <errorType>datatype-failed</errorType>
+        <path>/data[1]/zip[1]</path>
+        <alert/>
+        <value/>
+        <datatype>decimal</datatype>
+    </errorInfo>
+    <errorInfo>
+        <ref>zip</ref>
+        <errorType>required-failed</errorType>
+        <path>/data[1]/zip[1]</path>
+        <alert/>
+        <value/>
+        <datatype/>
+    </errorInfo>
+    <errorInfo>
+        <ref>city</ref>
+        <errorType>required-failed</errorType>
+        <path>/data[1]/city[1]</path>
+        <alert/>
+        <value/>
+        <datatype/>
+    </errorInfo>
+    <errorInfo>
+        <ref>email</ref>
+        <errorType>datatype-failed</errorType>
+        <path>/data[1]/email[1]</path>
+        <alert/>
+        <value>sdf</value>
+        <datatype>email</datatype>
     </errorInfo>
 </errors>
