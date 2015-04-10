@@ -274,6 +274,7 @@ module.exports = function (grunt) {
                     'components/font-awesome/fonts/**',
                     'components/jquery/dist/**',
                     'components/snap.svg/dist/**',
+                    'components/admin-lte/**',
                     'forms/*'
                 ],
                 dest: 'build/<%=xar.name%>-<%=xar.version%>.zip'

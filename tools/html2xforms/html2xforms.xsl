@@ -64,6 +64,31 @@
         mode model
         ###############################################################################################
     -->
+    <xsl:template name="createElement">
+        <xsl:param name="path"/>
+
+        <xsl:choose>
+            <xsl:when test="contains($path,'/')">
+                <xsl:variable name="step" select="substring-before($path,'/')"/>
+                <xsl:element name="{$step}" namespace="">
+                     <xsl:call-template name="createElement">
+                         <xsl:with-param name="path" select="substring-after($path,'/')"/>
+                     </xsl:call-template>
+                </xsl:element>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:element name="{$path}" namespace="">
+                     <xsl:apply-templates mode="model"/>
+                </xsl:element>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+    <xsl:template match="*[@data-ref]" mode="model" priority="20">
+        <xsl:call-template name="createElement">
+            <xsl:with-param name="path"  select="@data-ref"/>
+        </xsl:call-template>
+    </xsl:template>
 
     <xsl:template match="xhtml:form[@id]" mode="model" priority="10">
         <xsl:variable name="form-id" select="@id"/>
@@ -73,9 +98,39 @@
 
             <xsl:element name="xf:instance" namespace="http://www.w3.org/2002/xforms">
                 <xsl:attribute name="id">i-default</xsl:attribute>
-                <xsl:element name="data" namespace="">
+
+                <xsl:choose>
+                    <xsl:when test="exists(@data-ref)">
+                        <xsl:call-template name="createElement">
+                            <xsl:with-param name="path"  select="@data-ref"/>
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:when test="exists(@name)">
+                        <xsl:element name="{@name}" namespace="">
+                            <xsl:apply-templates select="*" mode="model"/>
+                        </xsl:element>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:element name="data" namespace="">
+                            <xsl:apply-templates select="*" mode="model"/>
+                        </xsl:element>
+                    </xsl:otherwise>
+                </xsl:choose>
+<!--
+                <xsl:variable name="rootname">
+                    <xsl:choose>
+                        <xsl:when test="exists(@name)">
+                            <xsl:value-of select="@name"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="'data'"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:variable>
+                <xsl:element name="{$rootname}" namespace="">
                     <xsl:apply-templates select="*" mode="model"/>
                 </xsl:element>
+-->
             </xsl:element>
 
             <!--
@@ -134,7 +189,17 @@
     </xsl:template>
 
     <xsl:template match="*[@name]" mode="model">
-        <xsl:element name="{@name}" namespace="">
+        <xsl:variable name="name">
+            <xsl:choose>
+                <xsl:when test="contains(@name,'[')">
+                    <xsl:value-of select="substring-before(@name,'[')"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="@name"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:element name="{$name}" namespace="">
 
             <xsl:if test="string-length($data) != 0">
                 <xsl:variable name="name" select="@name"/>
