@@ -30,7 +30,7 @@ module.exports = function(grunt) {
                 livereload: true
             },
             pages:{
-                files: ['pages/**'],
+                files: ['pages/**','custom-elements/**'],
                 tasks: ['mkdir:pages','rsync:pages']
             },
             target: {
@@ -61,8 +61,14 @@ module.exports = function(grunt) {
             },
             pages:{
                 options: {
-                    src: ['forms/**'],
+                    src: ['pages/**'],
                     dest: '<%= vars.webTarget %>/pages/'
+                }
+            },
+            bower:{
+                options: {
+                    src: ['bower_components/**'],
+                    dest: '<%= vars.webTarget %>/bower_components/'
                 }
             },
             distributeElements: {
@@ -70,15 +76,6 @@ module.exports = function(grunt) {
                     src: 'custom-elements/**',
                     dest: '<%= vars.webTarget %>/custom-elements/'
                 }
-            }
-        },
-
-        zip: {
-            xar: {
-                src: [
-                    'pages/**'
-                ],
-                dest: 'build/fore-demo.xar'
             }
         }
     });
