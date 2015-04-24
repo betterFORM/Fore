@@ -1,0 +1,10 @@
+{
+  "name": "fore client",
+  "private": true,
+  "dependencies": {
+    "webcomponentsjs": "~0.6.1"
+  },
+  "resolutions": {
+    "webcomponentsjs": "~0.6.1"
+  }
+}

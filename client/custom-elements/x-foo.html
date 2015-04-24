@@ -1,0 +1,20 @@
+<script>
+    var XFoo = document.registerElement('x-foo', {
+        prototype: Object.create(HTMLElement.prototype, {
+            createdCallback:  {
+                value:function() {
+                    console.log("created foo ---...");
+                    alert("hello world");
+                }
+            },
+            bar: {
+                get: function() { return 5; }
+            },
+            foo: {
+                value: function() {
+                    alert('foo() called');
+                }
+            }
+        })
+    });
+</script>
