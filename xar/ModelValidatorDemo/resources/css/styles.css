@@ -468,6 +468,18 @@ footer a:hover {
       }
   */
 }
+*[data-repeat-item] {
+  position: relative;
+  padding: 5px;
+  display: block;
+  margin: 5px 0;
+  border-radius: 5px;
+  border: 1px solid #d2d6de;
+}
+.repeat-delete {
+  float: right;
+  display: block;
+}
 .color {
   width: 100px;
   height: 100px;
