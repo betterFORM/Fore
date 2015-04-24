@@ -15,7 +15,8 @@
         exclude-result-prefixes="bf xsl">
 
     <!-- 'data' will be passed in case we deal with a html form submit and second layer validation -->
-    <xsl:param name="data" select="'display-name:ccc,line4:just a test,line5:,web:,line1:,type:,note:[aaa;sdfdsfds],line3:,country:,line2:'"/>
+    <!--<xsl:param name="data" select="'display-name:ccc,line4:just a test,line5:,web:,line1:,type:,note:[aaa;sdfdsfds],line3:,country:,line2:'"/>-->
+    <xsl:param name="data" select="'address[1].line2:1112,display-name:foobar,address[2].line3:2222,address[1].line3:1113,address[2].line4:2224,address[2].type:a,address[1].line4:,address[1].type:,web:,address[2].country:,address[1].line1:1111,address[2].line2:,address[2].line1:22222,address[1].country:,address[1].line5:,address[2].line5:,note:,'"/>
     <!--<xsl:param name="data" select="''"/>-->
 
     <xsl:output method="xhtml" omit-xml-declaration="yes"/>

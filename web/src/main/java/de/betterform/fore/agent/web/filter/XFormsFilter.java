@@ -375,15 +375,39 @@ public class XFormsFilter implements Filter {
         StringBuffer formData = new StringBuffer();
         while(params.hasMoreElements()){
             String name = params.nextElement();
-            String value = request.getParameter(name);
             formData.append(name);
             formData.append(":");
-            if(value != null){
-                formData.append(value);
+
+            String [] values = request.getParameterValues(name);
+            String value="";
+            if(values.length > 1){
+                formData.append("[");
+
+                for (int i = 0; i < values.length; i++) {
+                    value = values[i];
+                    if(value != null){
+                        formData.append(value);
+                    }else{
+                        formData.append("");
+                    }
+                    if(i<values.length-1) {
+                        formData.append(",");
+                    }
+                }
+
+                formData.append("],");
             }else{
-                formData.append("");
+                value = request.getParameter(name);
+                if(value != null){
+                    formData.append(value);
+                }else{
+                    formData.append("");
+                }
+                formData.append(",");
             }
-            formData.append(";");
+
+
+
         }
         if(LOG.isDebugEnabled()){
             LOG.debug("data send by form: " + formData.toString());

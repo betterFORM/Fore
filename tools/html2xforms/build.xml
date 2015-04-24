@@ -30,6 +30,17 @@
         </xslt>
     </target>
 
+    <target name="client2xforms" depends="prepare" description="transforms xhtml/xforms to html5 web components">
+        <xslt basedir="${basedir}"
+                out="${basedir}/target/client.html"
+                style="${basedir}/html2xforms.xsl"
+                force="true"
+                in="${basedir}/client.html">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+            <classpath refid="transform.class.path"/>
+        </xslt>
+    </target>
+
     <target name="mixinErrors" depends="prepare" description="transforms xhtml/xforms to html5 web components">
         <xslt basedir="${basedir}"
                 destdir="${basedir}/target"
@@ -41,5 +52,14 @@
         </xslt>
     </target>
 
-
+    <target name="injectTest" depends="client2xforms" description="transforms xhtml/xforms to html5 web components">
+        <xslt basedir="${basedir}"
+                out="${basedir}/target/client-updated.html"
+                style="${basedir}/inject-data.xsl"
+                force="true"
+                in="${basedir}/target/client.html">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+            <classpath refid="transform.class.path"/>
+        </xslt>
+    </target>
 </project>

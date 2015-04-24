@@ -1,6 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title></title>
+        <title/>
         <meta charset="UTF-8"/>
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
         <!-- Bootstrap 3.3.2 -->
@@ -15,7 +15,7 @@
         <link href="../components/admin-lte/dist/css/skins/skin-blue.min.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
-        <form role="form" id="client" data-ref="client/client-details">
+        <form role="form" id="client" action="modules/submit-test.xql" method="post" name="client.client-details">
             <div class="row">
                 <div class="col-sm-12">
                     <div class="box box-warning">
@@ -26,7 +26,7 @@
                             <div class="row">
                                 <label class="col-sm-2 control-label" for="clientname">Name</label>
                                 <div class="col-sm-10">
-                                    <input id="clientname" class="form-control" placeholder="Client name" type="text" data-template="app:get-client-name"/>
+                                    <input id="clientname" name="display-name" class="form-control" placeholder="Client name" type="text" data-template="app:get-client-name"/>
                                 </div>
                             </div>
                             <div class="row">
@@ -56,11 +56,14 @@
                             <h4>Addresses</h4>
                         </div>
                         <div class="box-body" name="addresses">
-                            <repeat-item name="address">
+                            <div data-repeat-item="address">
+                                <a href="#" class="repeat-delete">
+                                    <i class="fa fa-times"/>
+                                </a>
                                 <div class="row">
                                     <label class="col-sm-2" for="address-type">Address type</label>
                                     <div class="col-sm-10">
-                                        <select id="address-type" size="1" name="type" data-ref="type" data-template="app:get-client-address-type">
+                                        <select id="address-type" size="1" name="address[1].type" data-template="app:get-client-address-type">
                                             <option value=""/>
                                             <option value="delivery">Delivery</option>
                                             <option value="invoice">Invoice</option>
@@ -70,133 +73,56 @@
                                 <div class="row">
                                     <label class="col-sm-2">Address</label>
                                     <div class="col-sm-10">
-                                        <input name="line1" data-ref="line1" class="form-control" placeholder="address line 1" type="text" data-template="app:get-client-line1"/>
-                                        <input name="line2" class="form-control" placeholder="address line 2" type="text" data-template="app:get-client-line2"/>
-                                        <input name="line3" class="form-control" placeholder="address line 3" type="text" data-template="app:get-client-line3"/>
-                                        <input name="line4" class="form-control" placeholder="address line 4" type="text" data-template="app:get-client-line4"/>
-                                        <input name="line5" class="form-control" placeholder="address line 5" type="text" data-template="app:get-client-line5"/>
-                                        <select name="country" data-template="app:get-client-country">
+                                        <input name="address[1].line1" class="form-control" placeholder="address line 1" type="text" data-template="app:get-client-line1"/>
+                                        <input name="address[1].line2" class="form-control" placeholder="address line 2" type="text" data-template="app:get-client-line2"/>
+                                        <input name="address[1].line3" class="form-control" placeholder="address line 3" type="text" data-template="app:get-client-line3"/>
+                                        <input name="address[1].line4" class="form-control" placeholder="address line 4" type="text" data-template="app:get-client-line4"/>
+                                        <input name="address[1].line5" class="form-control" placeholder="address line 5" type="text" data-template="app:get-client-line5"/>
+                                        <select name="address[1].country" data-template="app:get-client-country">
                                             <option value=""/>
                                             <option value="de">Germany</option>
                                             <option value="en">GB</option>
                                         </select>
                                     </div>
                                 </div>
-                            </repeat-item>
+                            </div>
+                            <div data-repeat-item="address">
+                                <a href="#" class="repeat-delete">
+                                    <i class="fa fa-times"/>
+                                </a>
+                                <div class="row">
+                                    <label class="col-sm-2" for="address-type">Address type</label>
+                                    <div class="col-sm-10">
+                                        <select id="address-type" size="1" name="address[2].type" data-template="app:get-client-address-type">
+                                            <option value=""/>
+                                            <option value="delivery">Delivery</option>
+                                            <option value="invoice">Invoice</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label class="col-sm-2">Address</label>
+                                    <div class="col-sm-10">
+                                        <input name="address[2].line1" class="form-control" placeholder="address line 1" type="text" data-template="app:get-client-line1"/>
+                                        <input name="address[2].line2" class="form-control" placeholder="address line 2" type="text" data-template="app:get-client-line2"/>
+                                        <input name="address[2].line3" class="form-control" placeholder="address line 3" type="text" data-template="app:get-client-line3"/>
+                                        <input name="address[2].line4" class="form-control" placeholder="address line 4" type="text" data-template="app:get-client-line4"/>
+                                        <input name="address[2].line5" class="form-control" placeholder="address line 5" type="text" data-template="app:get-client-line5"/>
+                                        <select name="address[2].country" data-template="app:get-client-country">
+                                            <option value=""/>
+                                            <option value="de">Germany</option>
+                                            <option value="en">GB</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="btn-group pull-right">
                                         <a class="btn btn-primary" data-repeat-insert="address">
                                             <i class="fa fa-plus-square"/>
                                         </a>
-                                        <a class="btn btn-primary" data-repeat-delete="address[last()]">
-                                            <i class="fa fa-minus-square"/>
-                                        </a>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="box box-warning">
-                        <div class="box-header">
-                            <h4>Persons</h4>
-                        </div>
-                        <div class="box-body" name="persons">
-                            <repeat-item name="person">
-                                <div class="row">
-                                    <label class="col-sm-2" for="role">Role</label>
-                                    <div class="col-sm-10">
-                                        <input id="role" type="text" name="role" class="form-control" placeholder="Role of person" data-template="app:get-person-role"/>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <label class="col-sm-2" for="salutation">Salutation</label>
-                                    <div class="col-sm-2">
-                                        <select size="1" name="salutation" id="salutation" data-template="app:get-salutation">
-                                            <option value=""/>
-                                            <option value="Mrs">Mrs</option>
-                                            <option value="Mr">Mr</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <label class="col-sm-2" for="surname">Forename</label>
-                                    <div class="col-sm-10">
-                                        <input id="surname" type="text" name="surname" class="form-control" placeholder="Surname" data-template="app:get-surname"/>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <label class="col-sm-2" for="lastname">Lastname</label>
-                                    <div class="col-sm-10">
-                                        <input id="lastname" type="text" name="name" class="form-control" placeholder="Lastname" data-template="app:get-lastname"/>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <label class="col-sm-2" for="email">Email</label>
-                                    <div class="col-sm-10">
-                                        <input id="email" type="email" name="name" class="form-control" placeholder="email" data-template="app:get-email"/>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <label class="col-sm-2" for="phone">Phone</label>
-                                    <div class="col-sm-10">
-                                        <input id="phone" type="text" name="name" class="form-control" placeholder="Phone" data-template="app:get-phone"/>
-                                    </div>
-                                </div>
-                            </repeat-item>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="btn-group pull-right">
-                                        <a class="btn btn-primary" data-repeat-insert="person">
-                                            <i class="fa fa-plus-square"/>
-                                        </a>
-                                        <a class="btn btn-primary">
-                                            <i class="fa fa-minus-square"/>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="box box-warning">
-                        <div class="box-header">
-                            <h4>Financial</h4>
-                        </div>
-                        <div class="box-body">
-                            <div class="row">
-                                <label class="col-sm-2" for="tax">Tax number</label>
-                                <div class="col-sm-10">
-                                    <input id="tax" type="text" name="tax-number" class="form-control" placeholder="Tax number" data-template="app:get-tax-nr"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <label class="col-sm-2" for="taxrate">Tax rate</label>
-                                <div class="col-sm-10">
-                                    <input id="taxrate" type="text" name="taxrate" class="form-control" placeholder="Tax rate" data-template="app:get-tax-rate"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <label class="col-sm-2" for="vat">VAT number</label>
-                                <div class="col-sm-10">
-                                    <input id="vat" type="text" name="vatnumber" class="form-control" placeholder="VAT number" data-template="app:get-vat-nr"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <label class="col-sm-2" for="currency">Currency</label>
-                                <div class="col-sm-10">
-                                    <select id="currency" name="currency" size="1" data-template="app:get-currency">
-                                        <option value=""/>
-                                        <option value="EUR">Euro</option>
-                                        <option value="US">US Dollar</option>
-                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -204,62 +130,143 @@
                 </div>
             </div>
             <!--
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="box box-warning">
-                        <div class="box-header">
-                            <h4>Accounts</h4>
-                        </div>
-                        <div class="box-body">
-                            <div class="row">
-                                <label class="col-sm-2" for="existsolutions">eXist Solutions</label>
-                                <div class="col-sm-10">
-                                    <input id="existsolutions" type="text" name="solutions-user" class="form-control" placeholder="eXist Solutions username"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <label class="col-sm-2" for="github">Github</label>
-                                <div class="col-sm-10">
-                                    <input id="github" type="text" name="solutions-user" class="form-control" placeholder="Github username"/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            -->
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="box box-warning">
-                        <div class="box-header">
-                            <h4>Custom Fields</h4>
-                        </div>
-                        <div class="box-body" name="custom-fields">
-                            <div class="row" name="custom-field">
-                                <label class="col-sm-2" for="custom-name1">Custom field</label>
-                                <div class="col-sm-5">
-                                    <input id="custom-name1" type="text" name="custom-field-name-1" class="form-control" placeholder="name"/>
-                                </div>
-                                <div class="col-sm-5">
-                                    <input id="custom-value1" type="text" name="custom-field-name-2" class="form-control" placeholder="value"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="btn-group pull-right">
-                                        <a class="btn btn-primary" data-repeat-insert="custom-field">
-                                            <i class="fa fa-plus-square"/>
-                                        </a>
-                                        <a class="btn btn-primary">
-                                            <i class="fa fa-minus-square"/>
-                                        </a>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="box box-warning">
+                                    <div class="box-header">
+                                        <h4>Persons</h4>
+                                    </div>
+                                    <div class="box-body">
+                                        <div data-repeat-item="person">
+                                            <a href="#" class="repeat-delete">
+                                                <i class="fa fa-times"/>
+                                            </a>
+                                            <div class="row">
+                                                <label class="col-sm-2" for="role">Role</label>
+                                                <div class="col-sm-10">
+                                                    <input id="role" type="text" name="persons.person.role" class="form-control" placeholder="Role of person" data-template="app:get-person-role"/>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-sm-2" for="salutation">Salutation</label>
+                                                <div class="col-sm-2">
+                                                    <select size="1" name="persons.person.salutation" id="salutation" data-template="app:get-salutation">
+                                                        <option value=""/>
+                                                        <option value="Mrs">Mrs</option>
+                                                        <option value="Mr">Mr</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-sm-2" for="surname">Forename</label>
+                                                <div class="col-sm-10">
+                                                    <input id="surname" type="text" name="persons.person.surname" class="form-control" placeholder="Surname" data-template="app:get-surname"/>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-sm-2" for="lastname">Lastname</label>
+                                                <div class="col-sm-10">
+                                                    <input id="lastname" type="text" name="persons.person.name" class="form-control" placeholder="Lastname" data-template="app:get-lastname"/>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-sm-2" for="email">Email</label>
+                                                <div class="col-sm-10">
+                                                    <input id="email" type="email" name="persons.person.email" class="form-control" placeholder="email" data-template="app:get-email"/>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-sm-2" for="phone">Phone</label>
+                                                <div class="col-sm-10">
+                                                    <input id="phone" type="text" name="persons.person.phone" class="form-control" placeholder="Phone" data-template="app:get-phone"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="btn-group pull-right">
+                                                    <a class="btn btn-primary" data-repeat-insert="person">
+                                                        <i class="fa fa-plus-square"/>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="box box-warning">
+                                    <div class="box-header">
+                                        <h4>Financial</h4>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <label class="col-sm-2" for="tax">Tax number</label>
+                                            <div class="col-sm-10">
+                                                <input id="tax" type="text" name="tax-number" class="form-control" placeholder="Tax number" data-template="app:get-tax-nr"/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-sm-2" for="taxrate">Tax rate</label>
+                                            <div class="col-sm-10">
+                                                <input id="taxrate" type="text" name="taxrate" class="form-control" placeholder="Tax rate" data-template="app:get-tax-rate"/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-sm-2" for="vat">VAT number</label>
+                                            <div class="col-sm-10">
+                                                <input id="vat" type="text" name="vatnumber" class="form-control" placeholder="VAT number" data-template="app:get-vat-nr"/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-sm-2" for="currency">Currency</label>
+                                            <div class="col-sm-10">
+                                                <select id="currency" name="currency" size="1" data-template="app:get-currency">
+                                                    <option value=""/>
+                                                    <option value="EUR">Euro</option>
+                                                    <option value="US">US Dollar</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="box box-warning">
+                                    <div class="box-header">
+                                        <h4>Custom Fields</h4>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="row" data-repeat-item="custom-field">
+                                            <a href="#" class="repeat-delete">
+                                                <i class="fa fa-times"/>
+                                            </a>
+                                            <label class="col-sm-2" for="custom-name1">Custom field</label>
+                                            <div class="col-sm-4">
+                                                <input id="custom-name1" type="text" name="custom-field.name" class="form-control" placeholder="name"/>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <input id="custom-value1" type="text" name="custom-field.value" class="form-control" placeholder="value"/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="btn-group pull-right">
+                                                    <a class="btn btn-primary" data-repeat-insert="custom-field">
+                                                        <i class="fa fa-plus-square"/>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        -->
             <div class="row">
                 <div class="col-sm-12">
                     <div class="box box-warning">
@@ -267,7 +274,10 @@
                             <h4>Notes</h4>
                         </div>
                         <div class="box-body" name="notes">
-                            <div class="row">
+                            <div class="row" data-repeat-item="note">
+                                <a href="#" class="repeat-delete">
+                                    <i class="fa fa-times"/>
+                                </a>
                                 <label class="col-sm-2" for="note">Note</label>
                                 <div class="col-sm-10">
                                     <textarea id="note" name="note" class="form-control" data-template="app:get-note"/>
@@ -279,9 +289,6 @@
                                         <a class="btn btn-primary">
                                             <i class="fa fa-plus-square"/>
                                         </a>
-                                        <a class="btn btn-primary">
-                                            <i class="fa fa-minus-square"/>
-                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -290,8 +297,8 @@
                 </div>
             </div>
             <button class="btn btn-primary btn-lg">Save</button>
-        </form>    </body>
+        </form>
+        <script src="../components/jquery/dist/jquery.min.js"/>
+        <script src="../resources/js/app.js"/>
+    </body>
 </html>
-
-
-

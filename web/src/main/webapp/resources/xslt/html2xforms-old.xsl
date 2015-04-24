@@ -13,11 +13,9 @@
     <!-- 'data' will be passed in case we deal with a html form submit and second layer validation -->
     <xsl:param name="data" select="'record:foo;trackedDate:bar;created:heute;project:mine;duration:3;'"/>
     <xsl:param name="submission" select="''"/>
-    <xsl:param name="rootContext" select="'/db/apps/ModelValidatorDemo'"/>
-
     <!--<xsl:param name="data" select="''"/>-->
 
-    <xsl:output method="xhtml" omit-xml-declaration="yes"/>
+    <xsl:output method="xhtml" omit-xml-declaration="yes" />
     <!--
     Transforms sanitized HTML5 documents into into xforms elements.
     -->
@@ -66,161 +64,55 @@
         mode model
         ###############################################################################################
     -->
-    <xsl:template name="createElement">
-        <xsl:param name="path"/>
-        <xsl:param name="parent"/>
-        <xsl:param name="full-path"/>
-        <xsl:message>createElement PATH: <xsl:value-of select="$path"/></xsl:message>
-        <xsl:message>createElement PARENT: <xsl:value-of select="$parent"/></xsl:message>
-        <xsl:choose>
-            <!--  a repeated node-->
-            <xsl:when test="contains($path,'].')">
-                 <xsl:variable name="index">
-                    <xsl:variable name="after-start" select="substring-after($path,'[')"/>
-                    <xsl:value-of select="substring-before($after-start,']')"/>
-                </xsl:variable>
-                <xsl:variable name="step" select="substring-before($path,'[')"/>
-<!--
-                <xsl:message>index: <xsl:value-of select="$index"/></xsl:message>
-                <xsl:message>step: <xsl:value-of select="$step"/></xsl:message>
--->
 
-                <xsl:variable name="step-index" select="substring-before($path,'.')" />
-                <xsl:message>step+index: <xsl:value-of select="$step-index"/></xsl:message>
-                <xsl:message>step+index parent: <xsl:value-of select="$parent"/></xsl:message>
-                <xsl:choose>
-                    <xsl:when test="$step-index eq $parent">
-                        <xsl:message>createElement repeat path (parent exists): <xsl:value-of select="$step"/></xsl:message>
-                        <xsl:call-template name="createElement">
-                            <xsl:with-param name="path" select="substring-after($path,'.')"/>
-                        </xsl:call-template>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:message>createElement repeat path: <xsl:value-of select="$step-index"/></xsl:message>
-                        <xsl:message>createElement repeat path parent: <xsl:value-of select="$parent"/></xsl:message>
-
-                        <xsl:element name="{$step}">
-                            <xsl:call-template name="createElement">
-                                <xsl:with-param name="path" select="substring-after($path,'.')"/>
-                                <xsl:with-param name="parent" select="$step-index"/>
-                                <xsl:with-param name="full-path" select="$path"/>
-                            </xsl:call-template>
-                        </xsl:element>
-                    </xsl:otherwise>
-                </xsl:choose>
-            </xsl:when>
-            <xsl:when test="contains($path,'.')">
-                <xsl:variable name="step" select="substring-before($path,'.')"/>
-
-                <xsl:message>createElement dot path: <xsl:value-of select="$step"/></xsl:message>
-                <xsl:element name="{$step}" namespace="">
-                    <xsl:call-template name="createElement">
-                        <xsl:with-param name="path" select="substring-after($path,'.')"/>
-                        <xsl:with-param name="parent" select="substring-before($path,'.')"/>
-                    </xsl:call-template>
-                </xsl:element>
-            </xsl:when>
-            <xsl:when test="string-length($path) != 0">
-                <xsl:message>createElement simple: <xsl:value-of select="$path"/></xsl:message>
-                <xsl:message>createElement fullpath: <xsl:value-of select="$full-path"/></xsl:message>
-
-                <xsl:element name="{$path}" namespace="">
-                    <xsl:apply-templates mode="model"/>
-                </xsl:element>
-            </xsl:when>
-            <xsl:otherwise/>
-
-        </xsl:choose>
-    </xsl:template>
-
-    <xsl:template match="*[contains(@name,'.')]" mode="model" priority="20">
-        <xsl:call-template name="createElement">
-            <xsl:with-param name="path"  select="@name"/>
-        </xsl:call-template>
-    </xsl:template>
-
-    <xsl:template match="xhtml:form[@id]" mode="model" priority="30">
+    <xsl:template match="xhtml:form[@id]" mode="model" priority="10">
         <xsl:variable name="form-id" select="@id"/>
         <xsl:variable name="form" select="."/>
-
-
-        <xsl:message>hit form...</xsl:message>
-
         <xsl:element name="xf:model" namespace="http://www.w3.org/2002/xforms">
             <xsl:attribute name="id">m-<xsl:value-of select="$form-id"/></xsl:attribute>
 
             <xsl:element name="xf:instance" namespace="http://www.w3.org/2002/xforms">
                 <xsl:attribute name="id">i-default</xsl:attribute>
-
-                <xsl:choose>
-                    <xsl:when test="exists(contains(@name,'.'))">
-                        <xsl:call-template name="createElement">
-                            <xsl:with-param name="path"  select="@name"/>
-                        </xsl:call-template>
-                    </xsl:when>
-                    <xsl:when test="exists(@name)">
-                        <xsl:element name="{@name}" namespace="">
-                            <xsl:apply-templates select="*" mode="model"/>
-                        </xsl:element>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:element name="data" namespace="">
-                            <xsl:apply-templates select="*" mode="model"/>
-                        </xsl:element>
-                    </xsl:otherwise>
-                </xsl:choose>
-                <!--
-                                <xsl:variable name="rootname">
-                                    <xsl:choose>
-                                        <xsl:when test="exists(@name)">
-                                            <xsl:value-of select="@name"/>
-                                        </xsl:when>
-                                        <xsl:otherwise>
-                                            <xsl:value-of select="'data'"/>
-                                        </xsl:otherwise>
-                                    </xsl:choose>
-                                </xsl:variable>
-                                <xsl:element name="{$rootname}" namespace="">
-                                    <xsl:apply-templates select="*" mode="model"/>
-                                </xsl:element>
-                -->
+                <xsl:element name="data" namespace="">
+                    <xsl:apply-templates select="*" mode="model"/>
+                </xsl:element>
             </xsl:element>
 
-            <!--
-                        <xsl:variable name="this" select="."/>
-                        <xsl:for-each select="//*[@list]">
-                            <xsl:variable name="instance-id" select="@list"/>
-                            <xsl:variable name="options" select="$this//xhtml:datalist[@id eq $instance-id]"/>
+<!--
+            <xsl:variable name="this" select="."/>
+            <xsl:for-each select="//*[@list]">
+                <xsl:variable name="instance-id" select="@list"/>
+                <xsl:variable name="options" select="$this//xhtml:datalist[@id eq $instance-id]"/>
 
-                            <xsl:element name="xf:instance" namespace="http://www.w3.org/2002/xforms">
-                                <xsl:attribute name="id">i-<xsl:value-of select="$instance-id"/>
-                                </xsl:attribute>
-                                <xsl:element name="data" namespace="">
-                                    <xsl:for-each select="$options/xhtml:option">
-                                        <xsl:element name="option" namespace="">
-                                            <xsl:value-of select="@value"/>
-                                        </xsl:element>
-                                    </xsl:for-each>
-                                </xsl:element>
+                <xsl:element name="xf:instance" namespace="http://www.w3.org/2002/xforms">
+                    <xsl:attribute name="id">i-<xsl:value-of select="$instance-id"/>
+                    </xsl:attribute>
+                    <xsl:element name="data" namespace="">
+                        <xsl:for-each select="$options/xhtml:option">
+                            <xsl:element name="option" namespace="">
+                                <xsl:value-of select="@value"/>
                             </xsl:element>
                         </xsl:for-each>
+                    </xsl:element>
+                </xsl:element>
+            </xsl:for-each>
 
-                        <xsl:for-each select="//xhtml:select[xhtml:option]">
-                            <xsl:variable name="instance-id" select="@name"/>
+            <xsl:for-each select="//xhtml:select[xhtml:option]">
+                <xsl:variable name="instance-id" select="@name"/>
 
-                            <xsl:element name="xf:instance" namespace="http://www.w3.org/2002/xforms">
-                                <xsl:attribute name="id">i-<xsl:value-of select="$instance-id"/>
-                                </xsl:attribute>
-                                <xsl:element name="data" namespace="">
-                                    <xsl:for-each select="option">
-                                        <xsl:element name="option" namespace="">
-                                            <xsl:value-of select="@value"/>
-                                        </xsl:element>
-                                    </xsl:for-each>
-                                </xsl:element>
+                <xsl:element name="xf:instance" namespace="http://www.w3.org/2002/xforms">
+                    <xsl:attribute name="id">i-<xsl:value-of select="$instance-id"/>
+                    </xsl:attribute>
+                    <xsl:element name="data" namespace="">
+                        <xsl:for-each select="option">
+                            <xsl:element name="option" namespace="">
+                                <xsl:value-of select="@value"/>
                             </xsl:element>
                         </xsl:for-each>
-            -->
+                    </xsl:element>
+                </xsl:element>
+            </xsl:for-each>
+-->
 
             <xsl:apply-templates select="*" mode="bind"/>
 
@@ -229,37 +121,25 @@
                 <xsl:attribute name="id">s-default</xsl:attribute>
                 <!-- must always be replace="all" to return the response of the target script (action attribute) -->
                 <xsl:attribute name="replace">all</xsl:attribute>
-                <xsl:attribute name="resource">
-                    <xsl:value-of select="concat($rootContext,@action)"/>
-                </xsl:attribute>
+                <xsl:attribute name="resource"><xsl:value-of select="concat('exist:/',$submission)"/></xsl:attribute>
                 <xsl:attribute name="method">execute</xsl:attribute>
-                <!--
-                                <xsl:attribute name="method">
-                                    <xsl:variable name="method" select="if(exists($form/@method)) then @method else 'GET'"/>
-                                    <xsl:value-of select="$method"/>
-                                </xsl:attribute>
-                -->
-                <xsl:attribute name="validate">true()</xsl:attribute>
+<!--
+                <xsl:attribute name="method">
+                    <xsl:variable name="method" select="if(exists($form/@method)) then @method else 'GET'"/>
+                    <xsl:value-of select="$method"/>
+                </xsl:attribute>
+-->
+                <xsl:attribute name="validate">true</xsl:attribute>
             </xsl:element>
         </xsl:element>
     </xsl:template>
 
     <xsl:template match="*[@name]" mode="model">
-        <xsl:variable name="name">
-            <xsl:choose>
-                <xsl:when test="contains(@name,'[')">
-                    <xsl:value-of select="substring-before(@name,'[')"/>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:value-of select="@name"/>
-                </xsl:otherwise>
-            </xsl:choose>
-        </xsl:variable>
-        <xsl:element name="{$name}" namespace="">
+        <xsl:element name="{@name}" namespace="">
 
             <xsl:if test="string-length($data) != 0">
                 <xsl:variable name="name" select="@name"/>
-                <xsl:variable name="formData" select="tokenize($data, ',')"/>
+                <xsl:variable name="formData" select="tokenize($data, ';')"/>
                 <xsl:variable name="theValue">
                     <xsl:for-each select="$formData">
                         <xsl:if test="starts-with(.,$name)">
