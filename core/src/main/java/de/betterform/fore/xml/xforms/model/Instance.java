@@ -215,14 +215,19 @@ public class Instance extends XFormsElement {
     public void setNodeValue(Node node, String value) throws XFormsException {
         if(node != null){
             final ModelItem modelItem = getModelItem(node);
-            if (!modelItem.isReadonly()) {
-                modelItem.setValue(value);
-                this.model.addChanged((Node) modelItem.getNode());
-            } else {
-                getLogger().warn(this + " set node value: attempt to set readonly value");
-            }
+            setNodeValue(modelItem,value);
         }
     }
+
+    public void setNodeValue( ModelItem modelItem,String value) {
+        if (!modelItem.isReadonly()) {
+            modelItem.setValue(value);
+            this.model.addChanged((Node) modelItem.getNode());
+        } else {
+            getLogger().warn(this + " set node value: attempt to set readonly value");
+        }
+    }
+
 
     /**
      *

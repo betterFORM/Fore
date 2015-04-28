@@ -20,13 +20,73 @@ package de.betterform.fore.agent.web.atmosphere;
  */
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Message {
 
 //    private String message;
 //    private String author;
     private long time;
+    private String id;
+    private String ref;
+    private String datatype;
+    private boolean readonly;
+    private boolean required;
+    private boolean relevant;
+    private boolean valid;
 
+    public boolean isReadonly() {
+        return readonly;
+    }
+
+    public void setReadonly(boolean readonly) {
+        this.readonly = readonly;
+    }
+
+    public boolean isRelevant() {
+        return relevant;
+    }
+
+    public void setRelevant(boolean relevant) {
+        this.relevant = relevant;
+    }
+
+    public boolean isRequired() {
+        return required;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
+    }
+
+    public boolean isValid() {
+        return valid;
+    }
+
+    public void setValid(boolean valid) {
+        this.valid = valid;
+    }
+
+    public String getDatatype() {
+        return datatype;
+    }
+
+    public void setDatatype(String datatype){
+        this.datatype=datatype;
+    }
+
+    public String getRef(){
+        return this.ref;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getTargetId() {
         return targetId;

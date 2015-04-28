@@ -9,6 +9,7 @@ import de.betterform.fore.xml.events.BetterFormEventNames;
 import de.betterform.fore.xml.events.DOMEventNames;
 import de.betterform.fore.xml.events.XFormsEventNames;
 import de.betterform.fore.xml.xforms.exception.XFormsException;
+import de.betterform.fore.xml.xforms.model.ModelItem;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.events.Event;
@@ -52,6 +53,14 @@ public abstract class AbstractProcessorDecorator implements XFormsProcessor, Eve
         
     }
 */
+    public final ModelItem fetchState(String xpath) throws XFormsException {
+        return this.xformsProcessor.fetchState(xpath);
+    }
+
+    public final void setNodeValue(ModelItem item, String value) throws XFormsException {
+        this.xformsProcessor.setNodeValue(item,value);
+    }
+
 
     public XFormsProcessorImpl getXformsProcessor() {
         return xformsProcessor;

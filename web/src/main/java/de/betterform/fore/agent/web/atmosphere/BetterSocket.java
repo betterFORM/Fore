@@ -7,6 +7,7 @@ import de.betterform.fore.agent.web.WebUtil;
 import de.betterform.fore.agent.web.flux.SocketProcessor;
 import de.betterform.fore.xml.events.XMLEvent;
 import de.betterform.fore.xml.xforms.exception.XFormsException;
+import de.betterform.fore.xml.xforms.model.ModelItem;
 import org.atmosphere.config.service.*;
 import org.atmosphere.cpr.*;
 import org.slf4j.Logger;
@@ -89,6 +90,40 @@ public class BetterSocket{
             message.setValue("hat getan");
 
         }
+        if(message.getEventType().equalsIgnoreCase("init")){
+//            message.setValue("joooh");
+            try {
+                ModelItem item = xp.fetchState(message.getRef());
+                String value = item.getValue();
+
+                //passing ModelItem state
+                message.setReadonly(item.isReadonly());
+                message.setRequired(item.isRequired());
+                message.setRelevant(item.isRelevant());
+                message.setValid(item.isValid());
+                message.setDatatype(item.getXSIType());
+
+                message.setValue(value);
+            } catch (XFormsException e) {
+                e.printStackTrace();
+            }
+        }
+        if(message.getEventType().equalsIgnoreCase("valueChange")){
+            try {
+                ModelItem item = xp.fetchState(message.getRef());
+                xp.setNodeValue(item, message.getValue());
+                //passing ModelItem state
+                message.setReadonly(item.isReadonly());
+                message.setRequired(item.isRequired());
+                message.setRelevant(item.isRelevant());
+                message.setValid(item.isValid());
+                message.setDatatype(item.getXSIType());
+            } catch (XFormsException e) {
+                e.printStackTrace();
+            }
+        }
+
+
         return message;
 
     }

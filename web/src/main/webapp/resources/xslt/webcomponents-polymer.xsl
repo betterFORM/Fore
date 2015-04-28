@@ -132,15 +132,6 @@
 
             <!--<link rel="import" href="/betterform/webcomponents/bower_components/polymer/polymer.html"></link>-->
 
-            <xsl:value-of select="$CR"/>
-            <script src="/betterform/webcomponents/bower_components/platform/platform.js"></script>
-            <xsl:value-of select="$CR"/>
-
-            <link rel="import" href="/betterform/webcomponents/polymer-elements/better-jquery-atmosphere/better-jquery-atmosphere.html"></link>
-            <link rel="import" href="/betterform/webcomponents/polymer-elements/xf-input.html"></link>
-            <link rel="import" href="/betterform/webcomponents/polymer-elements/xf-trigger.html"></link>
-            <link rel="import" href="/betterform/webcomponents/polymer-elements/xf-hint.html"></link>
-
         </xsl:copy>
 
     </xsl:template>
@@ -153,17 +144,24 @@
             <xsl:apply-templates/>
 
             <!-- jt: @transport is not wired yet in script - just a hint how to do it later -->
-            <better-jquery-atmosphere transport="sse" xfSession="{$sessionKey}"></better-jquery-atmosphere>
 
+
+
+<!--
+            <script src="/betterform/bower_components/jquery/dist/jquery.js" type="text/javascript"></script>
             <xsl:value-of select="$CR"/>
+-->
+
+<!--
+            <script src="resources/js/jquery.atmosphere.js"/>
+            <xsl:value-of select="$CR"/>
+-->
             <!--
             >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
             Polymer import - the only js file imported directly
             <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             -->
-            <script src="/betterform/webcomponents/bower_components/jquery/dist/jquery.js" type="text/javascript"></script>
-            <xsl:value-of select="$CR"/>
-            <script src="/betterform/webcomponents/bower_components/jquery-atmosphere/jquery.atmosphere.js" type="text/javascript"></script>
+            <!--<script src="/betterform/bower_components/jquery-atmosphere/jquery.atmosphere.js" type="text/javascript"></script>-->
             <xsl:value-of select="$CR"/>
             <!--<script src="/betterform/webcomponents/js/better-atmosphere.js" type="text/javascript"></script>-->
             <xsl:value-of select="$CR"/>
@@ -335,7 +333,8 @@
 
     <xsl:template name="getLinkAndStyle"><xsl:text>
 </xsl:text>
-        <xsl:for-each select="link[not(@rel='import')]">
+        <!--<xsl:for-each select="link[not(@rel='import')]">-->
+        <xsl:for-each select="link">
             <xsl:element name="{local-name()}">
                 <xsl:copy-of select="@*" copy-namespaces="no"/>
             </xsl:element>

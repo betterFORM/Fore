@@ -18,6 +18,7 @@ import de.betterform.fore.xml.events.impl.XercesXMLEventFactory;
 import de.betterform.fore.xml.ns.NamespaceConstants;
 import de.betterform.fore.xml.xforms.exception.XFormsException;
 import de.betterform.fore.xml.xforms.model.Model;
+import de.betterform.fore.xml.xforms.model.ModelItem;
 import de.betterform.fore.xml.xforms.ui.AbstractFormControl;
 import de.betterform.fore.xml.xforms.ui.Repeat;
 import de.betterform.fore.xml.xforms.ui.Upload;
@@ -559,6 +560,19 @@ public class XFormsProcessorImpl implements XFormsProcessor, Externalizable{
         // update control value
         AbstractFormControl control = (AbstractFormControl) element;
         control.setValue(value);
+    }
+
+
+    public final ModelItem fetchState(String xpath) throws XFormsException {
+        return getContainer().getDefaultModel().getDefaultInstance().getModelItem(xpath);
+    }
+
+    public final void setNodeValue(ModelItem item, String value) throws XFormsException {
+        getContainer().getDefaultModel().getDefaultInstance().setNodeValue(item,value);
+        getContainer().getDefaultModel().rebuild();
+        getContainer().getDefaultModel().recalculate();
+        getContainer().getDefaultModel().revalidate();
+
     }
 
     /**

@@ -1,0 +1,83 @@
+<!--<script src="../../pages/resources/js/jquery.atmosphere.js"/>-->
+
+<script>
+    var XFInput = document.registerElement('fore-input', {
+        extends: 'input',
+        prototype: Object.create(HTMLInputElement.prototype, {
+            createdCallback: {
+                value: function () {
+                    console.log("created fore-input ---...");
+                    console.log("this: ", this);
+                    console.log("document: ", document);
+                    console.log("transport: ", this.getAttribute("ref"));
+
+                    console.log("f-a: ", document.querySelector('fore-brige'));
+
+                    $this=this;
+                    var fore = document.querySelector('fore-bridge');
+
+                    $(this).on("keyup",function(){
+
+                        console.log("value changed to: ", $(this).val());
+
+                        var msg = {
+                            id:$this.getAttribute("id"),
+                            ref:$this.getAttribute("ref"),
+                            value:$(this).val(),
+                            eventType:'valueChange'
+                        };
+
+                        console.log("Fore: ", fore);
+                        fore.sendMessage(msg);
+                    });
+
+                    $(document).on("xforms-ready",function(){
+//                        var fore = document.querySelector('fore-bridge');
+                        var msg = {
+                            id:$this.getAttribute("id"),
+                            ref:$this.getAttribute("ref"),
+                            eventType:'init'
+                        };
+                        console.log("xforms ready received");
+                        console.log("initing from server: ", this);
+                        console.log("initing from server: msg:  ", msg);
+
+                        fore.sendMessage(msg);
+                    });
+
+                }
+            },
+            setValue: {
+                value: function (newValue) {
+                    $(this).val(newValue);
+                }
+            },
+            setReadonly:{
+                value: function (readonly) {
+                    console.log("control ", $this.id, " readonly: ", readonly );
+                    if(readonly){
+                        $this.setAttribute("readonly","readonly");
+                    }else{
+                        $this.removeAttribute("readonly");
+                    }
+                }
+            },
+            setRequired:{
+                value: function (required) {
+                    console.log("control ", $this.id, " required: ", required );
+                }
+            },
+            setRelevant:{
+                value: function (relevant) {
+                    console.log("control ", $this.id, " relevant: ", relevant );
+                }
+            },
+            setValid:{
+                value: function (valid) {
+                    console.log("control ", $this.id, " valid: ", valid );
+                }
+            }
+
+        })
+    });
+</script>

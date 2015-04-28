@@ -2,7 +2,8 @@
   "name": "fore client",
   "private": true,
   "dependencies": {
-    "webcomponentsjs": "~0.6.1"
+    "webcomponentsjs": "~0.6.1",
+    "jquery-atmosphere": "~2.2.7"
   },
   "resolutions": {
     "webcomponentsjs": "~0.6.1"

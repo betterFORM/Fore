@@ -339,7 +339,7 @@ public class XFormsFilter implements Filter {
             boolean generateUI = true;
             if (handleResponseBody(request, bufResponse)) {
                 if (request.getRequestURI().endsWith(".html")) {
-                    if (request.getRequestURI().contains("components/")) {
+                    if (request.getRequestURI().contains("bower_components/")) {
                         response(response, bufResponse);
                     } else {
                         //html input processing

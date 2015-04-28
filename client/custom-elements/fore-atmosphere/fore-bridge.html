@@ -1,0 +1,142 @@
+<!--<script src="../../pages/resources/js/jquery.atmosphere.js"/>-->
+
+<style>
+    fore-bridge{
+        position:absolute;
+        right:3px;
+        top:3px;
+        padding:5px;
+        border:1px solid;
+    }
+    #log{
+    }
+</style>
+<script>
+    var XFoo = document.registerElement('fore-bridge', {
+        prototype: Object.create(HTMLElement.prototype, {
+            createdCallback: {
+                value: function () {
+                    console.log("created foo ---...");
+                    console.log("this: ", this);
+//                    console.log("document: ", document);
+//                    console.log("transport: ", this.getAttribute("transport"));
+
+                    this.innerHTML="<div id='log'></div>";
+                    //create from template
+
+                    this.socket = $.atmosphere;
+                    console.log("fore-bridge ready", this.socket.uuid);
+                    console.log("fore-bridge xfSession", this.getAttribute("xfSession"));
+                    that = this;
+                    var log = document.querySelector("#log");
+
+                    this.request = {
+                        url: '/betterform/msg/' + this.getAttribute("xfSession"),
+                        contentType: "application/json; charset=UTF-8",
+                        logLevel: 'debug',
+                        transport: 'websocket',
+                        trackMessageLength: true,
+                        fallbackTransport: 'long-polling',
+
+
+                        onOpen: function (response) {
+                            console.log('Atmosphere connected using ' + response.transport);
+
+                            $('<div/>', {
+                                text: response.request.uuid
+                            }).appendTo(log);
+                        },
+
+                        onMessage: function (response) {
+                            var message = response.responseBody;
+
+                            console.log("response: ", JSON.stringify(message));
+                            var json = null;
+                            try {
+                                json = jQuery.parseJSON(message);
+                            } catch (e) {
+                                console.log('This doesn\'t look like a valid JSON: ', message);
+                                return;
+                            }
+
+                            if ("betterform-state-changed" == json.type) {
+                                var targetId = json.contextInfo.targetId;
+                                console.log("executing betterform-state-changed targetId:", targetId);
+                                try {
+                                    document.querySelector("#" + targetId).updateToRemoteState(json);
+                                }
+                                catch (e) {
+                                    console.log('Could not execute method: ', targetId);
+                                }
+                            }
+
+                            if ("betterform-render-message" == json.type) {
+
+                            }
+
+                            if ("xforms-ready" == json.type){
+                                console.log("XForms is ready");
+                                var event = new CustomEvent("xforms-ready", {});
+                                document.dispatchEvent(event);
+                            }
+
+                            if ("init" === json.eventType) {
+                                console.log("jsid:", json.id);
+                                var targetControl = document.querySelector('#'+json.id);
+                                targetControl.setValue(json.value);
+                                targetControl.setReadonly(json.readonly);
+                                targetControl.setRequired(json.required);
+                                targetControl.setRelevant(json.relevant);
+                                targetControl.setValid(json.valid);
+                            }
+
+                            if ("valueChange" === json.eventType) {
+                                console.log("jsid:", json.id);
+                                var targetControl = document.querySelector('#'+json.id);
+                                targetControl.setValue(json.value);
+                                targetControl.setReadonly(json.readonly);
+                                targetControl.setRequired(json.required);
+                                targetControl.setRelevant(json.relevant);
+                                targetControl.setValid(json.valid);
+                            }
+
+//                    console.log("targetId: ", json.targetId);
+                            console.log("eventType: ", json.type);
+//                    console.log("value: ", json.value);
+                            $('<div/>', {
+                                text: json.type
+                            }).appendTo(log);
+                        },
+                        onClose: function (response) {
+                            console.log("onClose called");
+                        },
+
+                        myCall: function (reponse) {
+                            console.log("callback response:", response);
+                        },
+
+                        domReady:function() {
+                            console.log('onOpen ' + this.socket.uuid);
+                        }
+
+
+                    };
+                    console.log("this.socket: ", this.socket);
+
+
+                    this.subSocket = this.socket.subscribe(this.request);
+                }
+            },
+            sendMessage: {
+                value: function (msg) {
+                    console.log("socket.uuid ", this.socket.uuid);
+                    msg.uuid = this.socket.uuid;
+                    console.log("pushing: ", msg);
+                    this.subSocket.push(jQuery.stringifyJSON(msg));
+                }
+            }
+
+
+        })
+    });
+</script>
