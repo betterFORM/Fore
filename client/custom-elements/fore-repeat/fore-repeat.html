@@ -1,0 +1,22 @@
+<!--<script src="../../bower_components/jquery/dist/jquery.js" type="text/javascript"></script>-->
+<!--<script src="../../pages/resources/js/jquery.atmosphere.js"/>-->
+
+<script>
+    var XFInput = document.registerElement('fore-repeat', {
+        extends: 'div',
+        prototype: Object.create(HTMLElement.prototype, {
+
+            createdCallback: {
+                value: function () {
+                    //check existence of required id attr
+                    if(!this.hasAttribute("id")){
+                        alert("'id' attribute is required for component 'fore-repeat'");
+                        return;
+                    }
+                    console.log("#created fore-repeat element: ", this.id);
+
+                }
+            }
+        })
+    });
+</script>

@@ -1,0 +1,14 @@
+<script>
+    var XFInput = document.registerElement('fore-submission', {
+
+        prototype: Object.create(HTMLElement.prototype, {
+
+            createdCallback: {
+                value: function () {
+                    console.log("#created fore-submission with id: ", this.id);
+                }
+            }
+
+        })
+    });
+</script>

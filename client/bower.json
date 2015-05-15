@@ -3,7 +3,8 @@
   "private": true,
   "dependencies": {
     "webcomponentsjs": "~0.6.1",
-    "jquery-atmosphere": "~2.2.7"
+    "jquery-atmosphere": "~2.2.7",
+    "jquery-xpath": "~0.2.5"
   },
   "resolutions": {
     "webcomponentsjs": "~0.6.1"

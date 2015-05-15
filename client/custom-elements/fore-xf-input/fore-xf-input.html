@@ -1,0 +1,145 @@
+<!--<script src="../../bower_components/jquery/dist/jquery.js" type="text/javascript"></script>-->
+<!--<script src="../../bower_components/jquery-xpath/jquery.xpath.js" type="text/javascript"></script>-->
+
+<script>
+    var XFInput = document.registerElement('fore-xf-input', {
+        extends:'input',
+        prototype: Object.create(HTMLInputElement.prototype, {
+
+            createdCallback: {
+                value: function () {
+                    console.log("# created fore-xf-input with id: ", this.id);
+                    var fore = document.querySelector('fore-bridge');
+                    var that=this;
+
+                    this.value = this.value;
+                    $(this).on("keyup",function(){
+                        if(!this.hasAttribute("readonly")){
+                            var msg = {
+                                id:this.getAttribute("id"),
+                                ref:this.getAttribute("ref"),
+                                value:$(this).val(),
+                                eventType:'valueChange'
+                            };
+
+                            fore.sendMessage(msg);
+                        }
+                    });
+
+                    $(window).on("UIinitialize",function(){
+                        console.log("# UIinitilize event received ", that);
+                        //evaluate binding
+                        /*
+                         var binding = document.querySelector('#'+ that.getAttribute("bind"));
+                         console.log("# bind ", binding);
+                         var instance = binding.getAttribute("instance");
+                         console.log("# bind instance ", instance);
+                         var refAttr = binding.getAttribute("ref");
+                         console.log("# bind ref ", refAttr);
+
+                         var myNode = $("#"+instance).xpath("//foo");
+                         console.log("my bound nodes' value is: ", myNode);
+                         console.log("my bound nodes' value is: ", getNodeValue($(myNode)));
+                         */
+//                        var myVal = that.getInstanceValue($(that));
+                        //set my value
+//                        $(that).val(myVal)
+
+//                        var binding = document.querySelector('#'+ that.getAttribute("bind"));
+//                        console.log("readonly?" , binding.readonly);
+
+                    });
+
+                    $(this).on("xforms-ready",function(){
+                        console.log("xforms-ready - received on id with 'on': ",this.id);
+                        var ident = this.id;
+                        var ref= this.getAttribute("ref");
+                        console.log("id: ", ident, " ref: ", ref);
+                        var msg = {
+                            id:ident,
+                            ref:ref,
+                            eventType:'init'
+                        };
+                        fore.sendMessage(msg);
+                    });
+
+                }
+            },
+            setValue: {
+                value: function (newValue) {
+                    $(this).val(newValue);
+                }
+            },
+            setReadonly:{
+                value: function (readonly) {
+                    console.log("control ", this.id, " readonly: ", readonly );
+                    if(readonly === "true"){
+                        this.setAttribute("readonly","readonly");
+                    }else{
+                        this.removeAttribute("readonly");
+                    }
+                }
+            },
+            setRequired:{
+                value: function (required) {
+                    console.log("control ", this.id, " required: ", required );
+                    if(required === "true"){
+                        this.setAttribute("required","required");
+                    }else{
+                        this.removeAttribute("required");
+                    }
+                }
+            },
+            setRelevant:{
+                value: function (relevant) {
+                    console.log("control ", this.id, " relevant: ", relevant );
+                }
+            },
+            setValid:{
+                value: function (valid) {
+                    console.log("control ", this.id, " valid: ", valid );
+                }
+            },
+
+            refresh:{
+                value: function(){
+
+                }
+            },
+            getInstanceValue: {
+                value: function() {
+                    var binding = document.querySelector('#'+ this.getAttribute("bind"));
+                    console.log("# bind ", binding);
+                    var instance = binding.getAttribute("instance");
+                    console.log("# bind instance ", instance);
+                    var refAttr = binding.getAttribute("ref");
+                    console.log("# bind ref ", refAttr);
+
+//                    var myNode = $("#"+instance).xpath("//foo");
+                    var myNode = $("#"+instance).xpath(refAttr);
+                    console.log("my bound nodes' is: ", myNode);
+                    console.log("my bound nodes' value is: ", getNodeValue($(myNode)));
+                    return getNodeValue($(myNode));
+                }
+            }
+
+
+
+
+        })
+    });
+
+    function getTextNodes(node){
+        return $(node).contents().filter(function(){
+            return (
+            ((this.nodeName=="#text" && this.nodeType=="3") || this.nodeType=="4") // text node, or CDATA node
+            && ($.trim(this.nodeValue.replace("\n","")) !== "") // not empty
+            );
+        });
+    }
+    function getNodeValue(node){
+        var $textNodes = getTextNodes(node);
+        textValue = ($textNodes[0]) ? $.trim($textNodes[0].textContent) : "";
+        return textValue;
+    }
+</script>

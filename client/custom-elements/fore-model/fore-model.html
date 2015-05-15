@@ -1,0 +1,46 @@
+<!--<script src="../../bower_components/jquery/dist/jquery.js" type="text/javascript"></script>-->
+<script>
+    var XFInput = document.registerElement('fore-model',  {
+        prototype: Object.create(HTMLElement.prototype, {
+
+            createdCallback: {
+                value: function () {
+                    console.log("# created fore-model: ", this);
+
+                    var that = this;
+                    document.addEventListener("WebComponentsReady",function(){
+                        console.log(">>>>> WebComponentsReady <<<<<");
+                        //bootstrap model
+                        modelConstruct(that);
+                        UIinitialize();
+                    },false);
+
+                }
+            }
+
+        })
+    });
+
+    function modelConstruct(model){
+        console.log("# fore-model - modelConstruct",model);
+        //[1] load instances
+        $(model).find("fore-bind").each(function(){
+            console.log("# bind: ", this);
+            this.init();
+        });
+
+
+    }
+
+    function UIinitialize(model){
+        console.log(">>>>>> refreshing UI <<<<<");
+        $(window).trigger("refresh");
+
+/*
+        $(document.body).find("[is]").each(function(){
+            console.log("# UI Element: ",this);
+
+        });
+*/
+    }
+</script>

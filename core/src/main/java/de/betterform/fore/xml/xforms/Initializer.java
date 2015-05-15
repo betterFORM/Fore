@@ -16,6 +16,8 @@ import de.betterform.fore.xml.xforms.model.submission.Header;
 import de.betterform.fore.xml.xforms.model.submission.Submission;
 import de.betterform.fore.xml.xforms.ui.AVTElement;
 import de.betterform.fore.xml.xforms.ui.AbstractUIElement;
+import de.betterform.fore.xml.xforms.ui.Repeat;
+import de.betterform.fore.xml.xforms.ui.Text;
 import de.betterform.fore.xml.xpath.XPathReferenceFinder;
 
 import org.w3c.dom.Element;
@@ -199,7 +201,7 @@ public class Initializer {
         Element elementImpl = element.getOwnerDocument().getDocumentElement();
         Container container = (Container) elementImpl.getUserData("");
 
-        String evalAVT = elementImpl.getAttributeNS(NamespaceConstants.BETTERFORM_NS,"evalAVTs");
+        String evalAVT = elementImpl.getAttributeNS(NamespaceConstants.BETTERFORM_NS, "evalAVTs");
         if(evalAVT != null && evalAVT.length() != 0) {
             Initializer.initializeUIElements(container.getDefaultModel(), element, null,evalAVT);
         }else{
@@ -268,7 +270,19 @@ public class Initializer {
                     initXFormsObject(model, repeatItemId, uiElement);
 
 
-                } else {
+                }else if(elementImpl.hasAttribute("repeat-ref")){
+                    Model contextModel = Initializer.getContextModel(model, elementImpl);
+                    AbstractUIElement uiElement = new Repeat(elementImpl,contextModel);
+                    elementImpl.setUserData("",uiElement,null);
+
+                    initXFormsObject(model, repeatItemId, uiElement);
+                }else if(!(elementImpl.getLocalName().equals("bind")) && elementImpl.hasAttribute("ref")){
+                    Model contextModel = Initializer.getContextModel(model, elementImpl);
+                    AbstractUIElement uiElement = new Text(elementImpl,contextModel);
+                    elementImpl.setUserData("",uiElement,null);
+
+                    initXFormsObject(model, repeatItemId, uiElement);
+                }else {
                 	//recursive call to process child elements
                     Initializer.initializeUIElements(model, elementImpl, repeatItemId, evalAVT);
                 }

@@ -1,0 +1,47 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title></title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+        <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+        <link rel="import" href="../custom-elements/fore-model/fore-model.html"/>
+        <link rel="import" href="../custom-elements/fore-instance/fore-instance.html"/>
+        <link rel="import" href="../custom-elements/fore-bind/fore-bind.html"/>
+        <link rel="import" href="../custom-elements/fore-input/fore-input.html"/>
+
+    </head>
+    <body>
+        <fore-model>
+            <fore-instance id="i-default">
+                <data xmlns="">
+                    <bar></bar>
+                    <foo>bar</foo>
+                </data>
+            </fore-instance>
+
+            <fore-instance id="another"  src="dummy.xml">
+                <data xmlns="">
+                    <whatever>baz</whatever>
+                </data>
+            </fore-instance>
+
+            <fore-bind id="foo-bind" instance="i-default" ref="./data/foo" readonly="string-length(.) > 5" required="true()"/>
+            <fore-bind id="bar-bind" instance="i-default" ref="./data/bar" readonly="string-length(.) > 5" />
+        </fore-model>
+        
+        <input is="fore-input"  bind="foo-bind"/>
+        <br/>
+        <input is="fore-input"  bind="foo-bind" blur="setvalue('foo','newVal')"/>
+
+        <fore-action listenTo="[bind='foo-bind']" event="blur">
+
+        </fore-action>
+        <br/>
+        <input is="fore-input"  bind="bar-bind"/>
+            hi there sample1
+        <script src="../bower_components/jquery/dist/jquery.js" type="text/javascript"></script>
+    </body>
+</html>
+
+
+

@@ -1,0 +1,112 @@
+<!--<script src="../../pages/resources/js/jquery.atmosphere.js"/>-->
+
+<script>
+    var XFInput = document.registerElement('fore-bind', {
+
+        prototype: Object.create(HTMLElement.prototype, {
+            createdCallback: {
+                value: function () {
+                    console.log("## created fore-bind: ", this);
+                }
+
+            },
+
+            init: {
+                value: function() {
+                    console.log("## initing fore-bind id: ",this.id);
+                    var instanceAttr = this.getAttribute("instance");
+                    console.log("## initing fore-bind instance: ",instanceAttr);
+                    var refAttr = this.getAttribute("ref");
+                    console.log("## initing fore-bind ref: ",refAttr);
+                }
+            },
+
+            readonly: {
+                get: function() {
+                    var result = this._instanceNode.xpath(this.getAttribute("readonly"));
+//                    console.log("evaluated readonly expr: ", this.getAttribute("readonly"), " -> ", $(result).get(0));
+
+                    return $(result).get(0);
+                }
+            },
+            required: {
+                get: function() {
+                    if(this.hasAttribute("required")){
+                        var result = this._instanceNode.xpath(this.getAttribute("required"));
+                        return $(result).get(0);
+                    }else{
+                        return false;
+                    }
+                }
+            },
+            relevant: {
+                get: function() {
+                    if(this.hasAttribute("relevant")){
+                        var result = this._instanceNode.xpath(this.getAttribute("relevant"));
+                        return $(result).get(0);
+                    }else{
+                        return true;
+                    }
+                }
+            },
+            valid: {
+                get: function() {
+                    if(this.hasAttribute("constraint")){
+                        var result = this._instanceNode.xpath(this.getAttribute("constraint"));
+                        return $(result).get(0);
+                    }else{
+                        return true;
+                    }
+                }
+            },
+            setNodeValue: {
+                value: function(newValue) {
+                    console.log("setNodeValue: ", newValue);
+                    setNodeValue(this._instanceNode,newValue);
+//                    $(window).trigger("refresh");
+                }
+            },
+            _instanceNode:{
+                get: function() {
+                    return $(this._instance).xpath(this._ref);
+                }
+            },
+            instanceValue: {
+                get: function() {
+                    return getNodeValue(this._instanceNode);
+                }
+            },
+            _instance: {
+                get: function(){
+                    return $("#" + this.getAttribute("instance"));
+                }
+            },
+            _ref: {
+                get: function(){
+                    return this.getAttribute("ref");
+                }
+            }
+
+        })
+    });
+
+    function getTextNodes(node){
+        return $(node).contents().filter(function(){
+            return (
+            ((this.nodeName=="#text" && this.nodeType=="3") || this.nodeType=="4") // text node, or CDATA node
+            && ($.trim(this.nodeValue.replace("\n","")) !== "") // not empty
+            );
+        });
+    }
+    function getNodeValue(node){
+        var $textNodes = getTextNodes(node);
+        textValue = ($textNodes[0]) ? $.trim($textNodes[0].textContent) : "";
+        return textValue;
+    }
+    function setNodeValue(node, value){
+        var $textNodes = getTextNodes(node);
+        if ($textNodes.get(0)) $textNodes.get(0).nodeValue = value;
+        else node["textContent"] = value;
+    }
+
+</script>

@@ -1,0 +1,45 @@
+<!--<script src="../../pages/resources/js/jquery.atmosphere.js"/>-->
+<style> 
+        fore-instance{
+        display:none;
+    }
+</style>
+  
+<script>
+    var XFInput = document.registerElement('fore-instance', {
+        prototype: Object.create(HTMLElement.prototype, {
+
+            createdCallback: {
+                value: function () {
+                    console.log("## created fore-instance: ", this);
+                }
+
+            }
+            // LOADING CAN BE DONE BY THE SERVER WHICH ALWAYS INLINES DATA THEN
+            // NO SPECIFIC NEED FOR AN INIT FOR NOW
+            /*
+
+            ,
+            init: {
+                value: function(){
+                    console.log("## initing instance ", this.id);
+   
+                    if(this.hasAttribute("src")){
+                        var srcAttr = this.getAttribute("src");
+                        console.log("## loading instance from: ",srcAttr);
+                        var that = this;
+                        $.ajax({
+                            url:srcAttr,
+                            dataType:"xml"
+                        }).done(function(xml){
+                            that.appendChild(xml);
+                        });
+                    }
+                }
+            }
+             */
+
+        })
+    });
+</script>
+

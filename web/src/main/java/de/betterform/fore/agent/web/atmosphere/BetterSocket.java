@@ -46,7 +46,7 @@ public class BetterSocket{
         setSessionValue(r,"processor",socketProcessor);
 
         //return events that already executed during xforms model init
-        eventListToJSON(r, socketProcessor);
+//        eventListToJSON(r, socketProcessor);
 
         if (logger.isDebugEnabled()) {
             logger.debug("XForms Session key: " + xformsKey);
@@ -79,6 +79,9 @@ public class BetterSocket{
             logger.debug("AtmosphereResource: " + resource);
             logger.debug("XFormsProcessor: " + xp);
         }
+        if(message.getEventType().equalsIgnoreCase("init-model")){
+            eventListToJSON(resource, xp);
+        }
         if(message.getEventType().equalsIgnoreCase("DOMActivate")){
             try {
                 xp.dispatchEvent(message.getTargetId());
@@ -110,14 +113,16 @@ public class BetterSocket{
         }
         if(message.getEventType().equalsIgnoreCase("valueChange")){
             try {
-                ModelItem item = xp.fetchState(message.getRef());
-                xp.setNodeValue(item, message.getValue());
-                //passing ModelItem state
-                message.setReadonly(item.isReadonly());
-                message.setRequired(item.isRequired());
-                message.setRelevant(item.isRelevant());
-                message.setValid(item.isValid());
-                message.setDatatype(item.getXSIType());
+                xp.setControlValue(message.getId(),message.getValue());
+//                ModelItem item = xp.fetchState(message.getRef());
+//                xp.setNodeValue(item, message.getValue());
+//                message.setReadonly(item.isReadonly());
+//                message.setRequired(item.isRequired());
+//                message.setRelevant(item.isRelevant());
+//                message.setValid(item.isValid());
+//                message.setDatatype(item.getXSIType());
+                eventListToJSON(resource, xp);
+
             } catch (XFormsException e) {
                 e.printStackTrace();
             }
@@ -167,6 +172,7 @@ public class BetterSocket{
                 e.printStackTrace();
             }
         }
+        socketProcessor.getEventQueue().flush();
     }
 
 }

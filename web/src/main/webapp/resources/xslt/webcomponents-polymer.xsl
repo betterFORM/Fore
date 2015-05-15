@@ -136,6 +136,12 @@
 
     </xsl:template>
 
+    <xsl:template match="fore-bridge">
+        <xsl:copy>
+            <xsl:copy-of select="@transport"/>
+            <xsl:attribute name="xfSession" select="$sessionKey"/>
+        </xsl:copy>
+    </xsl:template>
 
     <xsl:template match="body">
         <xsl:element name="body">
@@ -200,6 +206,15 @@
 
     </xsl:template>
 
+    <xsl:template match="input[bf:data]">
+        <xsl:copy>
+            <xsl:copy-of select="@*[not(name()='value')]"/>
+            <xsl:attribute name="value" select="bf:data/text()"/>
+            <xsl:copy-of select="bf:data/@*"/>
+            <xsl:apply-templates/>
+        </xsl:copy>
+    </xsl:template>
+
     <!-- ##### always hide model on client for security reasons ###### -->
     <xsl:template match="xf:model" priority="20"/>
 
@@ -210,6 +225,12 @@
             <xsl:copy-of select="*|text()"/>
         </xf-state>
         -->
+        <!--<fore-state id="{../@id}-state"-->
+                    <!--readonly="{@readonly}"-->
+                    <!--required="{@required}"-->
+                    <!--relevant="{@enabled}"-->
+                    <!--valid="{@valid}"><xsl:value-of select="."/></fore-state>-->
+
     </xsl:template>
 
     <!--
@@ -232,6 +253,9 @@
         <link type="stylesheet" href="{$contextroot}{$resourcesPath}/styles/betterform.css"/>
     </xsl:template>
 
+    <xsl:template match="xf:group" priority="10">
+        <xsl:apply-templates/>
+    </xsl:template>
 
     <xsl:template match="xf:*">
         <xsl:variable name="this" select="."/>

@@ -1,0 +1,50 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title></title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+        <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+        <link rel="import" href="../custom-elements/fore-model/fore-model.html"/>
+        <link rel="import" href="../custom-elements/fore-instance/fore-instance.html"/>
+        <link rel="import" href="../custom-elements/fore-bind/fore-bind.html"/>
+        <link rel="import" href="../custom-elements/fore-input/fore-input.html"/>
+
+    </head>
+    <body>
+<!--
+        <fore-model>
+            <fore-instance id="i-default">
+                <data xmlns="">
+                    <bar></bar>
+                    <foo>bar</foo>
+                </data>
+            </fore-instance>
+
+            <fore-instance id="another"  src="dummy.xml">
+                <data xmlns="">
+                    <whatever>baz</whatever>
+                </data>
+            </fore-instance>
+
+        </fore-model>
+-->
+
+        <h1>Constraints expressed directly on control</h1>
+        <p>
+            Here the obvious disadvantage is the duplication of code on controls that bind to the same node. While
+            this would not be necessary from the XForms point of view it might confuse users.
+        </p>
+        <input is="fore-input"  ref="foo" readonly="string-length(.) > 5" required="true()"/>
+        <br/>
+        <input is="fore-input"  ref="foo" readonly="string-length(.) > 5" required="true()"/>
+        <br/>
+        <input is="fore-input"  ref="bar" readonly="string-length(.) > 10"/>
+        <br/>
+        <input is="fore-input"  ref="instance('another')/whatever" />
+            hi there sample1
+        <script src="../bower_components/jquery/dist/jquery.js" type="text/javascript"></script>
+    </body>
+</html>
+
+
+
